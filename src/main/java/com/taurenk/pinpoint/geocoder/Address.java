@@ -1,5 +1,7 @@
 package com.taurenk.pinpoint.geocoder;
 
+import java.util.List;
+
 /**
  * Created by tauren on 3/25/15.
  */
@@ -9,8 +11,8 @@ public class Address {
     private String number;
     private String street;
     private String city;
-    //Potential city for future use.
-    //private List<String> potential_cities;
+    //Potential city list
+    private List<String> potential_cities;
     private String state;
     private String zip;
 
@@ -66,4 +68,7 @@ public class Address {
         this.zip = zip;
     }
 
+    public List<String> getPotential_cities() {
+        return potential_cities;
+    }
 }

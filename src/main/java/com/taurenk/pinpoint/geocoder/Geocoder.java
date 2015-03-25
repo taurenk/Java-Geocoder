@@ -7,7 +7,7 @@ public class Geocoder {
 
     private AddressParser parser;
 
-    public Geocoder(String address) {
+    public Geocoder() {
         parser = new AddressParser();
     }
 
@@ -17,7 +17,9 @@ public class Geocoder {
      * @return
      */
     public Address geocodeAddress(String addrString){
+        parser.preParse(addrString);
+        Address address = parser.address;
 
-        return null;
+        return address;
     }
 }
