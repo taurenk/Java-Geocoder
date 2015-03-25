@@ -17,8 +17,8 @@ public class GeocodeController {
     private Geocoder geocoder = new Geocoder();
 
     @RequestMapping("/geocode")
-    public String getTest(@RequestParam(value="address", defaultValue="6 caputo drive manorville ny 11949") String address) {
-        //geocoder.geocodeAddress(address);
-        return  address;
+    public Address getTest(@RequestParam(value="address", defaultValue="6 caputo drive manorville ny 11949") String address) {
+        Address addr = geocoder.geocodeAddress(address);
+        return  addr;
     }
 }
