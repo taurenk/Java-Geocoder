@@ -7,28 +7,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * Created by tauren on 3/25/15.
  */
 @RestController
-@RequestMapping("/test/places")
+@RequestMapping("/api/places")
 public class PlaceController {
 
     @Autowired
     private PlaceService placeService;
 
-    @RequestMapping("/get-one")
-    public String getTest() {
-        System.out.println("Testing...");
-        Place place = placeService.getPlaceById(1);
-        System.out.println(place);
-        return  "Test Complete.";
-    }
-
     @RequestMapping("/getPlaceByZip")
     public Place getPlaceByZipcode(@RequestParam(value="zipcode", defaultValue="11949") String zipcode) {
         Place place = placeService.getPlaceByZip(zipcode);
         return  place;
+    }
+
+    @RequestMapping("/getPlaceByCity")
+    public List<Place> getPlaceByCity(@RequestParam(value="city", defaultValue="Manorville") String city) {
+        List<Place> places = placeService.getPlaceByCity(city);
+        return  places;
     }
 
 }

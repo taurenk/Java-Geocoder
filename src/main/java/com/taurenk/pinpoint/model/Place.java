@@ -40,4 +40,5 @@ public class Place {
     public String getState() {
         return state;
     }
+
 }

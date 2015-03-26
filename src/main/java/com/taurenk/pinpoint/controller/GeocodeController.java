@@ -1,11 +1,11 @@
 package com.taurenk.pinpoint.controller;
 
+import com.taurenk.pinpoint.exception.PlaceNotFound;
 import com.taurenk.pinpoint.geocoder.Address;
 import com.taurenk.pinpoint.geocoder.Geocoder;
 import com.taurenk.pinpoint.model.Place;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by tauren on 3/25/15.
@@ -18,7 +18,11 @@ public class GeocodeController {
 
     @RequestMapping("/geocode")
     public Address getTest(@RequestParam(value="address", defaultValue="6 caputo drive manorville ny 11949") String address) {
-        Address addr = geocoder.geocodeAddress(address);
+        Address addr = geocoder.geocode(address);
         return  addr;
     }
+
+
+
+
 }

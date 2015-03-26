@@ -19,7 +19,7 @@ public class AddressParser_Test {
 
         for (String addr : test_address) {
             System.out.println("Geocoding Address: " + addr.toString());
-            geocoder.geocodeAddress(addr);
+            geocoder.geocode(addr);
 
         }
     }

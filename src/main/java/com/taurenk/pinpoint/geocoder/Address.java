@@ -1,5 +1,8 @@
 package com.taurenk.pinpoint.geocoder;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 /**
@@ -16,8 +19,36 @@ public class Address {
     private String state;
     private String zip;
 
+    private double lat;
+    private double lon;
+
     public Address(String addressString) {
         this.addressString = addressString;
+    }
+
+    @JsonIgnore
+    public List<String> getPotential_cities() {
+        return potential_cities;
+    }
+
+    public void setPotential_cities(List<String> potential_cities) {
+        this.potential_cities = potential_cities;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 
     public String getAddressString() {
@@ -68,7 +99,5 @@ public class Address {
         this.zip = zip;
     }
 
-    public List<String> getPotential_cities() {
-        return potential_cities;
-    }
+
 }
