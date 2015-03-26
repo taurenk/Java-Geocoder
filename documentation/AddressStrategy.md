@@ -11,7 +11,7 @@ PinPoint is run on Spring Boot. Will document this in depth later.
   - Identify potential cities
   - Return Address Object [created from String]
 3. Find "place" candidates:
-  - IF Zip is found: Places by zipcode
+  - IF Zip is found: Lookup Places by Zip
     - IF zipcode matched city: Move on
   - ELSE: Places by potential city
     - IF places found: Move on

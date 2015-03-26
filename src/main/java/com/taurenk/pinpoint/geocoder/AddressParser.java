@@ -34,6 +34,9 @@ public class AddressParser {
 
         addr = extractState(addr);
         System.out.println("\tAfter State: <" + addr + ">");
+
+        // Move remaining string to street
+        address.setStreet(addr);
     }
 
     /**
