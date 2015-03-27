@@ -19,16 +19,29 @@ public class PlaceController {
     @Autowired
     private PlaceService placeService;
 
-    @RequestMapping("/getPlaceByZip")
-    public Place getPlaceByZipcode(@RequestParam(value="zipcode", defaultValue="11949") String zipcode) {
-        Place place = placeService.getPlaceByZip(zipcode);
+    @RequestMapping("/placeByZip")
+    public Place getPlaceByZipcode(@RequestParam(value="zipcode") String zipcode) {
+        Place place = placeService.placeByZip(zipcode);
         return  place;
     }
 
-    @RequestMapping("/getPlaceByCity")
-    public List<Place> getPlaceByCity(@RequestParam(value="city", defaultValue="Manorville") String city) {
-        List<Place> places = placeService.getPlaceByCity(city);
+
+    @RequestMapping("/placesByCity")
+    public List<Place> getPlaceByCity(@RequestParam(value="city") String city) {
+        List<Place> places = placeService.placesByCity(city);
         return  places;
+    }
+
+
+    @RequestMapping("/placesByCityFuzzy")
+    public List<Place> getPlaceByCityFuzzy(@RequestParam(value="city") String city) {
+        List<Place> places = placeService.placesByCityFuzzy(city);
+        return  places;
+    }
+
+    @RequestMapping("/placesByCityScore")
+    public List<Place> getPlaceByCityScore(@RequestParam(value="city") String city) {
+        return placeService.placesByCity_withScore(city);
     }
 
 }

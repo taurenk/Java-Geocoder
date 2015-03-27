@@ -2,6 +2,8 @@ package com.taurenk.pinpoint.geocoder;
 
 import com.taurenk.pinpoint.geocoder.library.AddressUtilities;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 
 /**
@@ -35,6 +37,7 @@ public class AddressParser {
         addr = extractState(addr);
         System.out.println("\tAfter State: <" + addr + ">");
 
+        extractPotentialCities(addr);
         // Move remaining string to street
         address.setStreet(addr);
     }
@@ -110,4 +113,23 @@ public class AddressParser {
         }
         return addressString.trim();
     }
+
+    /**
+     * Attempt to find potential city strings by parsing out remaining strings in address.
+     * Average US cities are of length 1,2, 3 words.
+     * @param addressString
+     */
+    public void extractPotentialCities(String addressString) {
+        List<String> potentialCities = new ArrayList();
+        String list[] = addressString.split(" ");
+        if (list.length >=1) { potentialCities.add( list[(list.length-1)]  ); }
+        if (list.length >=2) { potentialCities.add(list[list.length-2] + " "
+                                    + list[list.length-1] ); }
+        if (list.length >=3) { potentialCities.add(list[list.length-3] + " " +
+                list[list.length-2] + " " + list[list.length-1] ); }
+
+        address.setPotential_cities(potentialCities);
+    }
+
+
 }

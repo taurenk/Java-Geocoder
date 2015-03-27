@@ -21,9 +21,10 @@ public class Place {
     @Column(name="place")
     private String city;
 
-
     @Column(name="name1")
     private String state;
+
+    private int stringDistance;
 
     public Integer getId() {
         return Id;
@@ -41,4 +42,32 @@ public class Place {
         return state;
     }
 
+
+    public int getStringDistance() {
+        return stringDistance;
+    }
+
+    public void setStringDistance(String distance) {
+        this.stringDistance = Integer.parseInt(distance);
+    }
+
+    public void setId(Integer id) {
+        Id = id;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public void setStringDistance(int stringDistance) {
+        this.stringDistance = stringDistance;
+    }
 }

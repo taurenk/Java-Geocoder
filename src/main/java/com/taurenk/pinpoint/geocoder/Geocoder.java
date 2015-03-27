@@ -35,6 +35,11 @@ public class Geocoder {
         parser.preParse(addrString);
         Address address = parser.address;
         address = this.geocodeCity(address);
+        // If intersection
+        // If PO Box
+        // GEOCODE ADDRESS
+        // if !results: PLACE
+        // Else: no results :(
         return address;
     }
 
@@ -54,31 +59,43 @@ public class Geocoder {
      */
     public Address geocodeCity(Address address){
 
-        List<Place> placeCandidates = new ArrayList();
+        /*
+        Goal: Identify city or potential cities. Want to return a list of zips/city combos
+        so that WHEN we get to geocoding the address, we will have a filtered target of addrfeats to search for.
 
-        // If zip find it!
+        IF zip: THEN find place by zips
+            If place.city in address.street: set citySearch
+            If place.city fuzzy in address.street: set citySearch
+          IF !citySearch: THEN find place by potential cities
+            - Rank Candidate(s) according to string distance.
+
+
+        */
+
+            String citySearch = null;
+
+        // If zip find it
         if (address.getZip() != null) {
-            System.out.println("\t\tTEST: " + address.getZip());
-            Place place = placeService.getPlaceByZip("11949");
-            System.out.println("\t\tPlace:" + place.getCity());
-            if (place != null){
-                placeCandidates.add(place);
+            Place place = placeService.placeByZip(address.getZip());
+
+            if ( address.getStreet().contains(place.getCity()) ) {
+                citySearch = place.getCity();
             }
+            // If a fuzzy search is needed, hold off.
         }
 
+        // Find potential cities and "fuzzy match them".
+        // Using potential city list extracted from address string.
+        // This would do the ranking and return something to set up/extract the city..
+        if (citySearch == null) {
+            //use potential city list
+            //List<Place> places = placeService.getPlaceByCity()
+            //
 
-        // city is *probably* in embedded in street string at this point. Find it and Extract.
-        if (placeCandidates.get(0) != null){
-            // Check if found zip/city is embedded...
-            Place p = placeCandidates.get(0);
-            String foundCity = placeCandidates.get(0).getCity();
-            if (address.getStreet().contains(foundCity)) {
-                address.setCity(foundCity);
-                String newStreet = address.getStreet();
-                // Be careful, Do not want to replace EVERY occurence or the wrong occurence
-                newStreet = newStreet.replaceAll("\\s(" +foundCity+ ")$", "");
-                address.setStreet(newStreet);
-            }
+        }
+
+        if (citySearch == null) {
+            return address;
         }
 
         return address;
