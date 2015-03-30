@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,15 +34,13 @@ public class PlaceController {
     }
 
 
-    @RequestMapping("/placesByCityFuzzy")
-    public List<Place> getPlaceByCityFuzzy(@RequestParam(value="city") String city) {
-        List<Place> places = placeService.placesByCityFuzzy(city);
-        return  places;
+    @RequestMapping("/test")
+    public List<Place> test() {
+        List<String> cityList = new ArrayList<String>();
+        cityList.add("MANORVILLE");
+        cityList.add("DRIVE MANORVILLE");
+        return placeService.placesByCityList(cityList);
     }
 
-    @RequestMapping("/placesByCityScore")
-    public List<Place> getPlaceByCityScore(@RequestParam(value="city") String city) {
-        return placeService.placesByCity_withScore(city);
-    }
 
 }

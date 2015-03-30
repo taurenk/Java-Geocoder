@@ -14,22 +14,8 @@ public interface PlaceRepository extends CrudRepository<Place, Integer> {
 
     Place findPlaceByZip(String zip);
 
-    List<Place> findPlaceByCity(String city);
-
     /**
-     * Custom Query to find a place record based on a fuzzy city search
-     *
-     * @param city
-     * @return List<place>
-     */
-    @Query(value = "SELECT * FROM Place " +
-            "WHERE dmetaphone(?#{[0]}) = dmetaphone(place) " +
-            "AND  levenshtein(place, ?#{[0]}) <= 3;", nativeQuery = true)
-    List<Place> findPlaceByCityFuzzy(String city);
-
-
-    /**
-     * Expirmental Method - extract place data with the levenshtien score
+     * Find a place by fuzzy searching City
      *
      * @param city
      * @return
@@ -37,13 +23,23 @@ public interface PlaceRepository extends CrudRepository<Place, Integer> {
     @Query(value = "SELECT id, zip, place, name1, levenshtein(place, ?#{[0]}) FROM Place " +
             "WHERE dmetaphone(?#{[0]}) = dmetaphone(place) " +
             "AND  levenshtein(place, ?#{[0]}) <= 3;", nativeQuery = true)
-    List<Object[]> findPlaceByCity_score(String city);
+    List<Object[]> findPlaceByCity(String city);
 
 
-    /*
-    @Query(value = "SELECT * Place WHERE dmetaphone(place) IN (?#{[0]})", nativeQuery = true)
-    List<Place> placesByCityList(String cityList);
-    */
+    /**
+     *
+     * @param city
+     * @param cityMetaphone
+     * @return
+     */
+    @Query(value= "SELECT place.id, place.zip, place.place, place.name1, levenshtein(place.place, x.city) " +
+            "FROM place JOIN ( VALUES " +
+            //" ?#{[1]} ) " +
+            " (?#{[0]}, ?#{[1]}) ) " +
+            "AS x (city, city_dmetaphone) " +
+            "ON dmetaphone(place.place) = x.city_dmetaphone " +
+            "WHERE levenshtein(place.place, x.city) <= 3;", nativeQuery=true)
+    List<Object[]> placesByCityList(String city, String cityMetaphone);
 }
 
 

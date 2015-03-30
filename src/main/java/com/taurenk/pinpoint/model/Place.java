@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * Created by tauren on 3/25/15.
@@ -24,6 +25,7 @@ public class Place {
     @Column(name="name1")
     private String state;
 
+    @Transient
     private int stringDistance;
 
     public Integer getId() {

@@ -35,6 +35,7 @@ public class Geocoder {
         parser.preParse(addrString);
         Address address = parser.address;
         address = this.geocodeCity(address);
+        // Maybe: Geocode city FIRST. Then we know what we are dealing with...?
         // If intersection
         // If PO Box
         // GEOCODE ADDRESS
@@ -72,7 +73,7 @@ public class Geocoder {
 
         */
 
-            String citySearch = null;
+        String citySearch = null;
 
         // If zip find it
         if (address.getZip() != null) {
@@ -100,5 +101,7 @@ public class Geocoder {
 
         return address;
     }
+
+
 
 }
