@@ -36,10 +36,11 @@ public class PlaceController {
 
     @RequestMapping("/test")
     public List<Place> test() {
-        List<String> cityList = new ArrayList<String>();
+        List<String> cityList = new ArrayList();
         cityList.add("MANORVILLE");
         cityList.add("DRIVE MANORVILLE");
         return placeService.placesByCityList(cityList);
+        //return placeService.placesByCityList(cityList);
     }
 
 

@@ -5,9 +5,12 @@ import com.taurenk.pinpoint.repository.PlaceRepository;
 import com.taurenk.pinpoint.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by tauren on 3/25/15.
@@ -33,75 +36,85 @@ public class Geocoder {
      */
     public Address geocode(String addrString){
         parser.preParse(addrString);
+        // Parse address string into Address Object
         Address address = parser.address;
-        address = this.geocodeCity(address);
-        // Maybe: Geocode city FIRST. Then we know what we are dealing with...?
+        // Build a new address results object
+        AddressResult addressResult = new AddressResult(address);
+        // Try and remove City From Address - while finding place candidates
+        addressResult = this.geocodeCity(addressResult);
+
+
         // If intersection
+        if (address.getIntersectionFlag() == true) {
+            System.out.println("Address is an intersection!");
+            // Return something
+        }
         // If PO Box
+        if (address.getPoBox() != null) {
+            System.out.println("Address is a PO Box!");
+            // Geocode City/Place
+        }
         // GEOCODE ADDRESS
-        // if !results: PLACE
-        // Else: no results :(
-        return address;
+
+        return addressResult.getAddress();
     }
 
-    /**
-     * Todo: Geocode an address
-     * @param address
-     */
-    public void geocodeAddress(Address address){
-       // verify zip/city combo
-    }
+
 
     /**
-     * Re-usable class for geocoding city/zip based queries
-     * TODO: High Level Doc
-     * @param address
+     * Often times City will be lodged into the Street Address string.
+     * Try and locate/extract this data.
+     * @param addressResult
      * @return
      */
-    public Address geocodeCity(Address address){
+    public AddressResult geocodeCity(AddressResult addressResult){
+        Address address = addressResult.getAddress();
 
-        /*
-        Goal: Identify city or potential cities. Want to return a list of zips/city combos
-        so that WHEN we get to geocoding the address, we will have a filtered target of addrfeats to search for.
-
-        IF zip: THEN find place by zips
-            If place.city in address.street: set citySearch
-            If place.city fuzzy in address.street: set citySearch
-          IF !citySearch: THEN find place by potential cities
-            - Rank Candidate(s) according to string distance.
-
-
-        */
-
-        String citySearch = null;
-
-        // If zip find it
+        // Check if the Place/Zip is in Street String
         if (address.getZip() != null) {
             Place place = placeService.placeByZip(address.getZip());
-
-            if ( address.getStreet().contains(place.getCity()) ) {
-                citySearch = place.getCity();
+            System.out.println("\tPlaces Found by Zip:" + place.getZip() + " : " + place.getCity());
+            if (place != null) {
+                address = extractCityData(address, place.getCity());
             }
-            // If a fuzzy search is needed, hold off.
         }
 
-        // Find potential cities and "fuzzy match them".
-        // Using potential city list extracted from address string.
-        // This would do the ranking and return something to set up/extract the city..
-        if (citySearch == null) {
-            //use potential city list
-            //List<Place> places = placeService.getPlaceByCity()
-            //
+        return addressResult;
+    }
 
+
+    // This only works on STRICT matches. Need to be able to support "fuzzy matching"...
+    private Address extractCityData(Address address, String city) {
+        String street = address.getStreet();
+        System.out.println("\tExtracting city from <" + street + ">");
+        Pattern p = Pattern.compile("\\s(" + city + ")$");
+        Matcher m = p.matcher(street); // get a matcher object
+
+        if (m.find() ) {
+            System.out.println("\tFound City: " + city);
+            address.setCity(city);
+            address.setStreet(street.replace("\\s("+city+")$", ""));
         }
-
-        if (citySearch == null) {
-            return address;
-        }
-
         return address;
     }
 
 
+
+    /**
+     * Attempt to find potential city strings by parsing out remaining strings in address.
+     * Average US cities are of length 1,2, 3 words.
+     * @param addressString
+     */
+    private List<String> extractPotentialCities(String addressString) {
+        List<String> potentialCities = new ArrayList();
+        String list[] = addressString.split(" ");
+        if (list.length >=1) { potentialCities.add( list[(list.length-1)]  ); }
+        if (list.length >=2) { potentialCities.add(list[list.length-2] + " "
+                + list[list.length-1] ); }
+        if (list.length >=3) { potentialCities.add(list[list.length-3] + " " +
+                list[list.length-2] + " " + list[list.length-1] ); }
+
+        return potentialCities;
+    }
 
 }

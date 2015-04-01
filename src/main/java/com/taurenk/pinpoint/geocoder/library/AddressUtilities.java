@@ -21,6 +21,9 @@ public class AddressUtilities {
     private Pattern cityRegex = Pattern.compile("\\s(\\w+)$");
     private Pattern stateRegex;
 
+    private Pattern intersectionTest = Pattern.compile("\\s(AT|@|AND|&)\\s");
+    private Pattern poBoxRegex = Pattern.compile("\\s(PO BOX|P O BOX|P.O. BOX)(\\s|\\s#|\\s#\\s)(\\d*)");
+
     // US Address Standards Map
     private HashMap state_map;
     private HashMap directional_map;
@@ -34,6 +37,14 @@ public class AddressUtilities {
 
     public Pattern getZipRegex() {
         return zipRegex;
+    }
+
+    public Pattern getIntersectionTest() {
+        return intersectionTest;
+    }
+
+    public Pattern getPoBoxRegex() {
+        return poBoxRegex;
     }
 
     public Pattern getNumRegex() {

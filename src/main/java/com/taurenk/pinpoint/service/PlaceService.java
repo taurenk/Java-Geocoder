@@ -21,6 +21,7 @@ public class PlaceService {
     private PlaceRepository placeRepository;
 
 
+
     public Place placeByZip(String zip){return placeRepository.findPlaceByZip(zip); }
 
 
@@ -35,26 +36,21 @@ public class PlaceService {
     }
 
 
+
     /**
      * Retrieve list of potential city candidates with score.
      * @param potentialCities
      * @return
      */
     public List<Place> placesByCityList(List<String> potentialCities) {
-        System.out.println("\tConverting city list...");
-        List<Object[]> results = new ArrayList();
         String[][] cityList = this.assembleCityList(potentialCities);
 
-        System.out.println("\tConverted: " + cityList );
-        // Used a little hack here to save time.
-        // Todo use a dynamic query t get this in one go.
-        for (int i=0;i<cityList.length;i++) {
-            List<Object[]> resultSet = placeRepository.placesByCityList(cityList[i][0], cityList[i][1]);
-            results.addAll(resultSet);
-        }
-        System.out.println("\tResults returned.");
-        return this.objectToPlace(results);
+        List<Object[]> resultSet = placeRepository.placesByCityList(cityList[0][0], cityList[0][1],
+                cityList[1][0], cityList[1][2],
+                cityList[2][0], cityList[2][1]  ); //"MANORVILLE","MNRF");
+        return this.objectToPlace(resultSet);
     }
+
 
 
     /**
@@ -63,6 +59,7 @@ public class PlaceService {
      * @return List<Place> places
      */
     private List<Place> objectToPlace(List<Object[]> objectList) {
+        System.out.println("Converting Objects to Place: " + objectList.size());
         List<Place> places = new ArrayList();
         for (Object[] result : objectList) {
             Place place = new Place();
@@ -72,6 +69,7 @@ public class PlaceService {
             place.setState((String)result[3]);
             place.setStringDistance((Integer)result[4]);
             places.add(place);
+            System.out.println("\tPlaceZip=" + place.getZip());
         }
         return places;
     }
@@ -86,14 +84,21 @@ public class PlaceService {
      */
     private String[][] assembleCityList(List<String> potentialCities) {
 
-        String cityList[][] = new String[potentialCities.size()][2];
+        String cityList[][] = new String[3][2];
         DoubleMetaphone dm = new DoubleMetaphone();
-
-        for(int i=0; i<potentialCities.size();i++) {
-            String city = potentialCities.get(i);
-            cityList[i][0] = city;
-            cityList[i][1] = dm.doubleMetaphone(potentialCities.get(i));
+        int index = 0;
+        for (int i=0; i<potentialCities.size();i++) {
+            String currCity = potentialCities.get(i);
+            cityList[i][0] = currCity;
+            cityList[i][1] = dm.doubleMetaphone(currCity);
+            index++;
         }
+
+        // fill rest of list up
+       for (int i=index; i<3; i++){
+           cityList[i][0] = cityList[i-1][0];
+           cityList[i][1] = cityList[i-1][1];
+       }
 
         return cityList;
     }

@@ -3,7 +3,7 @@ package com.taurenk.pinpoint.repository;
 import com.taurenk.pinpoint.model.Place;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -25,21 +25,28 @@ public interface PlaceRepository extends CrudRepository<Place, Integer> {
             "AND  levenshtein(place, ?#{[0]}) <= 3;", nativeQuery = true)
     List<Object[]> findPlaceByCity(String city);
 
-
-    /**
-     *
-     * @param city
-     * @param cityMetaphone
-     * @return
-     */
+    /*
     @Query(value= "SELECT place.id, place.zip, place.place, place.name1, levenshtein(place.place, x.city) " +
             "FROM place JOIN ( VALUES " +
-            //" ?#{[1]} ) " +
-            " (?#{[0]}, ?#{[1]}) ) " +
+            " (?1, ?2) )" +
             "AS x (city, city_dmetaphone) " +
-            "ON dmetaphone(place.place) = x.city_dmetaphone " +
-            "WHERE levenshtein(place.place, x.city) <= 3;", nativeQuery=true)
-    List<Object[]> placesByCityList(String city, String cityMetaphone);
+            "ON dmetaphone(place.place) = x.city_dmetaphone "
+            //"WHERE levenshtein(place.place, x.city) <= 3;"
+            , nativeQuery=true)
+    */
+    // @Query(value= "SELECT id, zip, place, name1, levenshtein(place,?#{[0]} ) FROM Place WHERE place = ?#{[0]} or place = ?#{[1]}  ;", nativeQuery = true)
+    // @Query(value= "SELECT id, zip, place, name1, levenshtein(place,?#{[0]} ) FROM Place WHERE place IN ( ?#{[0]} , ?#{[1]} )  ;", nativeQuery = true)
+    @Query(value= "SELECT DISTINCT place.id, place.zip, place.place, place.name1, levenshtein(place.place, x.city) " +
+            "FROM place JOIN ( VALUES " +
+            " ( ?#{[0]} , ?#{[1]} ), " +
+            " ( ?#{[2]} , ?#{[3]} ), " +
+            " ( ?#{[4]} , ?#{[5]} ) )" +
+            "AS x (city, city_dmetaphone) " +
+            "ON dmetaphone(place.place) = x.city_dmetaphone WHERE levenshtein(place.place, x.city) <= 3 ; ", nativeQuery=true)
+    List<Object[]> placesByCityList(String one, String two,
+                                    String three, String four,
+                                    String five, String six);
+
 }
 
 

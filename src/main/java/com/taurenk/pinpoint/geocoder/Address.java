@@ -2,6 +2,7 @@ package com.taurenk.pinpoint.geocoder;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.taurenk.pinpoint.model.Place;
 
 import java.util.List;
 
@@ -14,10 +15,17 @@ public class Address {
     private String number;
     private String street;
     private String city;
-    //Potential city list
-    private List<String> potential_cities;
+
+
+    //private List<String> potential_cities; //Potential cities address *could* be in.
+    // Exprirment with this a bit.
+    //private List<Place> potential_places;
+
     private String state;
     private String zip;
+
+    private String poBox;
+    private Boolean intersectionFlag = false;
 
     private double lat;
     private double lon;
@@ -26,14 +34,7 @@ public class Address {
         this.addressString = addressString;
     }
 
-    @JsonIgnore
-    public List<String> getPotential_cities() {
-        return potential_cities;
-    }
 
-    public void setPotential_cities(List<String> potential_cities) {
-        this.potential_cities = potential_cities;
-    }
 
     public double getLat() {
         return lat;
@@ -99,5 +100,19 @@ public class Address {
         this.zip = zip;
     }
 
+    public String getPoBox() {
+        return poBox;
+    }
 
+    public void setPoBox(String poBox) {
+        this.poBox = poBox;
+    }
+
+    public Boolean getIntersectionFlag() {
+        return intersectionFlag;
+    }
+
+    public void setIntersectionFlag(Boolean intersectionFlag) {
+        this.intersectionFlag = intersectionFlag;
+    }
 }

@@ -5,6 +5,7 @@ import com.taurenk.pinpoint.geocoder.library.AddressUtilities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by tauren on 3/25/15.
@@ -29,15 +30,14 @@ public class AddressParser {
 
         String addr = this.address.getAddressString();
         addr = extractZip(addr);
-        System.out.println("\tAfter ZIP: <" + addr + ">");
-
         addr = extractNumber(addr);
-        System.out.println("\tAfter Number: <" + addr + ">");
-
         addr = extractState(addr);
-        System.out.println("\tAfter State: <" + addr + ">");
+        addr = extractPOBox(addr);
 
-        extractPotentialCities(addr);
+        // Test Intersection
+        Matcher m = addressUtilities.getIntersectionTest().matcher(addr);
+        if (m.find( )) { this.address.setIntersectionFlag(true);}
+
         // Move remaining string to street
         address.setStreet(addr);
     }
@@ -63,15 +63,11 @@ public class AddressParser {
      * @return
      */
     public String extractZip(String addressString) {
-
         Matcher m = addressUtilities.getZipRegex().matcher(addressString);
-
         if (m.find( )) {
-            System.out.println("\t\tZip Match: <" + m.group(0) +">" );
+            //System.out.println("\t\tZip Match: <" + m.group(0) +">" );
             this.address.setZip(m.group(0).trim());
             addressString = addressString.replace(m.group(0), "");
-        } else {
-            System.out.println("\t\tip Match: NO MATCH");
         }
         return addressString.trim();
     }
@@ -86,11 +82,9 @@ public class AddressParser {
     public String extractNumber(String addressString) {
         Matcher m = addressUtilities.getNumRegex().matcher(addressString);
         if (m.find( )) {
-            System.out.println("\t\tNumber Match: <" + m.group(0) + ">");
+            //System.out.println("\t\tNumber Match: <" + m.group(0) + ">");
             this.address.setNumber(m.group(0).trim());
             addressString = addressString.replace(m.group(0), "");
-        } else {
-            System.out.println("\t\tNumber Match: NO MATCH");
         }
         return addressString.trim();
     }
@@ -105,31 +99,26 @@ public class AddressParser {
     public String extractState(String addressString) {
         Matcher m = addressUtilities.getStateRegex().matcher(addressString);
         if (m.find( )) {
-            System.out.println("\t\tStates Match: <" + m.group(0) + ">");
+            //System.out.println("\t\tStates Match: <" + m.group(0) + ">");
             this.address.setState(m.group(0).trim());
             addressString = addressString.replace(m.group(0), "");
-        } else {
-            System.out.println("\t\tStates Match: NO MATCH");
         }
         return addressString.trim();
     }
 
+
     /**
-     * Attempt to find potential city strings by parsing out remaining strings in address.
-     * Average US cities are of length 1,2, 3 words.
+     * Locate and Extract PO Box if found.
      * @param addressString
+     * @return
      */
-    public void extractPotentialCities(String addressString) {
-        List<String> potentialCities = new ArrayList();
-        String list[] = addressString.split(" ");
-        if (list.length >=1) { potentialCities.add( list[(list.length-1)]  ); }
-        if (list.length >=2) { potentialCities.add(list[list.length-2] + " "
-                                    + list[list.length-1] ); }
-        if (list.length >=3) { potentialCities.add(list[list.length-3] + " " +
-                list[list.length-2] + " " + list[list.length-1] ); }
-
-        address.setPotential_cities(potentialCities);
+    public String extractPOBox(String addressString) {
+        Matcher m = addressUtilities.getPoBoxRegex().matcher(addressString);
+        if (m.find( )) {
+            //System.out.println("\t\tPO Box Match: <" + m.group(0) + ">");
+            this.address.setPoBox(m.group(0).trim());
+            addressString = addressString.replace(m.group(0), "");
+        }
+        return addressString.trim();
     }
-
-
 }
