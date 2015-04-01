@@ -93,8 +93,13 @@ public class Geocoder {
         if (m.find() ) {
             System.out.println("\tFound City: " + city);
             address.setCity(city);
-            address.setStreet(street.replace("\\s("+city+")$", ""));
+            street = street.replaceAll("\\s("+city+")$", "");
+            System.out.println("\tNew Street: " + street);
+            address.setStreet(street);
+            return address;
         }
+        // Use fancy  fuzzy matching now..
+
         return address;
     }
 
