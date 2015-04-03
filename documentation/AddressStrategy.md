@@ -22,3 +22,14 @@ PinPoint is run on Spring Boot. Will document this in depth later.
   - Retieve candidate list of potential "AddrFeats"
 6. Rank
 7. Geocode Highest Ranked Candidate
+
+
+<h4>City Search</h4>
+1. Search Places for given Zipcode.
+    - If place.city EXACTLY matches a potential city -> found.
+    - If place.city FUZZY matches a potential city -> found?
+2. If no Match is found:
+    - Pull data based on potential "cities" [tokenize data]
+    - Find and extract out city
+        - Metaphone Match
+        - String Distance match

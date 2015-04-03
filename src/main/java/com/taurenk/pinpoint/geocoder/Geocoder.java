@@ -3,6 +3,7 @@ package com.taurenk.pinpoint.geocoder;
 import com.taurenk.pinpoint.model.Place;
 import com.taurenk.pinpoint.repository.PlaceRepository;
 import com.taurenk.pinpoint.service.PlaceService;
+import org.apache.commons.codec.language.DoubleMetaphone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -43,7 +44,7 @@ public class Geocoder {
         // Try and remove City From Address - while finding place candidates
         addressResult = this.geocodeCity(addressResult);
 
-
+        /*
         // If intersection
         if (address.getIntersectionFlag() == true) {
             System.out.println("Address is an intersection!");
@@ -54,72 +55,38 @@ public class Geocoder {
             System.out.println("Address is a PO Box!");
             // Geocode City/Place
         }
+        */
         // GEOCODE ADDRESS
 
         return addressResult.getAddress();
     }
 
 
-
     /**
-     * Often times City will be lodged into the Street Address string.
-     * Try and locate/extract this data.
+     * The idea here is to remove the city from the street string.
      * @param addressResult
      * @return
      */
-    public AddressResult geocodeCity(AddressResult addressResult){
+    private AddressResult geocodeCity(AddressResult addressResult) {
         Address address = addressResult.getAddress();
+        GeocodeCity cityGeocoder = new GeocodeCity();
 
-        // Check if the Place/Zip is in Street String
         if (address.getZip() != null) {
-            Place place = placeService.placeByZip(address.getZip());
-            System.out.println("\tPlaces Found by Zip:" + place.getZip() + " : " + place.getCity());
+            Place place = placeService.placeByZip(address.getZip() );
             if (place != null) {
-                address = extractCityData(address, place.getCity());
+               addressResult = cityGeocoder.geocodeByZip(place, addressResult);
+            }
+
+            if (addressResult.getAddress().getCity() == null) {
+                // try a more 'fuzzier' match based on city tokens.
+                List<Place> placeList = placeService.placesByCityList(addressResult.getStreetTokens(), address.getState());
+                if (placeList != null) {
+                    addressResult = cityGeocoder.geocodeByCity(placeList, addressResult);
+                }
             }
         }
-
         return addressResult;
     }
 
-
-    // This only works on STRICT matches. Need to be able to support "fuzzy matching"...
-    private Address extractCityData(Address address, String city) {
-        String street = address.getStreet();
-        System.out.println("\tExtracting city from <" + street + ">");
-        Pattern p = Pattern.compile("\\s(" + city + ")$");
-        Matcher m = p.matcher(street); // get a matcher object
-
-        if (m.find() ) {
-            System.out.println("\tFound City: " + city);
-            address.setCity(city);
-            street = street.replaceAll("\\s("+city+")$", "");
-            System.out.println("\tNew Street: " + street);
-            address.setStreet(street);
-            return address;
-        }
-        // Use fancy  fuzzy matching now..
-
-        return address;
-    }
-
-
-
-    /**
-     * Attempt to find potential city strings by parsing out remaining strings in address.
-     * Average US cities are of length 1,2, 3 words.
-     * @param addressString
-     */
-    private List<String> extractPotentialCities(String addressString) {
-        List<String> potentialCities = new ArrayList();
-        String list[] = addressString.split(" ");
-        if (list.length >=1) { potentialCities.add( list[(list.length-1)]  ); }
-        if (list.length >=2) { potentialCities.add(list[list.length-2] + " "
-                + list[list.length-1] ); }
-        if (list.length >=3) { potentialCities.add(list[list.length-3] + " " +
-                list[list.length-2] + " " + list[list.length-1] ); }
-
-        return potentialCities;
-    }
 
 }

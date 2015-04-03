@@ -3,6 +3,7 @@ package com.taurenk.pinpoint.geocoder.library;
 import com.taurenk.pinpoint.geocoder.Address;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -25,14 +26,14 @@ public class AddressUtilities {
     private Pattern poBoxRegex = Pattern.compile("\\s(PO BOX|P O BOX|P.O. BOX)(\\s|\\s#|\\s#\\s)(\\d*)");
 
     // US Address Standards Map
-    private HashMap state_map;
-    private HashMap directional_map;
+    private HashMap<String, String> state_map;
+    private HashMap<String, String> directional_map;
 
     public AddressUtilities() {
         LibraryLoader data = new LibraryLoader();
-        stateRegex = Pattern.compile(data.getSTATE_REGEX());
-        state_map = data.getSTATE_MAP();
-        directional_map = data.getDIRECTIONAL_MAP();
+        this.stateRegex = Pattern.compile(data.getSTATE_REGEX());
+        this.state_map = data.getSTATE_MAP();
+        this.directional_map = data.getDIRECTIONAL_MAP();
     }
 
     public Pattern getZipRegex() {
@@ -59,11 +60,11 @@ public class AddressUtilities {
         return stateRegex;
     }
 
-    public HashMap getState_map() {
+    public HashMap<String, String> getState_map() {
         return state_map;
     }
 
-    public HashMap getDirectional_map() {
+    public HashMap<String, String> getDirectional_map() {
         return directional_map;
     }
 }

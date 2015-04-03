@@ -25,6 +25,10 @@ public class Place {
     @Column(name="name1")
     private String state;
 
+    private Double latitude;
+
+    private Double longitude;
+
     @Transient
     private int stringDistance;
 
@@ -43,7 +47,6 @@ public class Place {
     public String getState() {
         return state;
     }
-
 
     public int getStringDistance() {
         return stringDistance;
@@ -68,6 +71,10 @@ public class Place {
     public void setState(String state) {
         this.state = state;
     }
+
+    public Double getLongitude() { return longitude; }
+
+    public Double getLatitude() { return latitude; }
 
     public void setStringDistance(int stringDistance) {
         this.stringDistance = stringDistance;

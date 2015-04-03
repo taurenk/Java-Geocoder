@@ -99,8 +99,13 @@ public class AddressParser {
     public String extractState(String addressString) {
         Matcher m = addressUtilities.getStateRegex().matcher(addressString);
         if (m.find( )) {
-            //System.out.println("\t\tStates Match: <" + m.group(0) + ">");
-            this.address.setState(m.group(0).trim());
+            // Standardize State to State Code
+            String state = m.group(0).trim().toString();
+
+            if ( addressUtilities.getState_map().containsKey(state) )  {
+                state = addressUtilities.getState_map().get(state);
+            }
+            this.address.setState(state);
             addressString = addressString.replace(m.group(0), "");
         }
         return addressString.trim();

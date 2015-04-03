@@ -16,11 +16,6 @@ public class Address {
     private String street;
     private String city;
 
-
-    //private List<String> potential_cities; //Potential cities address *could* be in.
-    // Exprirment with this a bit.
-    //private List<Place> potential_places;
-
     private String state;
     private String zip;
 

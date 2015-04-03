@@ -39,7 +39,7 @@ public class PlaceController {
         List<String> cityList = new ArrayList();
         cityList.add("MANORVILLE");
         cityList.add("DRIVE MANORVILLE");
-        return placeService.placesByCityList(cityList);
+        return placeService.placesByCityList(cityList, null);
         //return placeService.placesByCityList(cityList);
     }
 

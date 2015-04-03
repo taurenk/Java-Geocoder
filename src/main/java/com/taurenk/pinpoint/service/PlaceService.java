@@ -42,12 +42,14 @@ public class PlaceService {
      * @param potentialCities
      * @return
      */
-    public List<Place> placesByCityList(List<String> potentialCities) {
+    public List<Place> placesByCityList(List<String> potentialCities, String state) {
         String[][] cityList = this.assembleCityList(potentialCities);
-
+        // if no state is found, look at all states/zips.
+        if (state==null) {state = "%";}
         List<Object[]> resultSet = placeRepository.placesByCityList(cityList[0][0], cityList[0][1],
-                cityList[1][0], cityList[1][2],
-                cityList[2][0], cityList[2][1]  ); //"MANORVILLE","MNRF");
+                                                    cityList[1][0], cityList[1][1],
+                                                    cityList[2][0], cityList[2][1],
+                                                    state);
         return this.objectToPlace(resultSet);
     }
 
@@ -96,10 +98,9 @@ public class PlaceService {
 
         // fill rest of list up
        for (int i=index; i<3; i++){
-           cityList[i][0] = cityList[i-1][0];
-           cityList[i][1] = cityList[i-1][1];
+           cityList[i][0] = "NULL";
+           cityList[i][1] = "NULL";
        }
-
         return cityList;
     }
 

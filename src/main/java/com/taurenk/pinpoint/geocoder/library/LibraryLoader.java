@@ -16,16 +16,16 @@ import java.util.Map;
  */
 public class LibraryLoader {
 
-    private HashMap STATE_MAP;
-    private HashMap DIRECTIONAL_MAP;
-    private HashMap UNIT_MAP;
+    private HashMap<String, String> STATE_MAP;
+    private HashMap<String, String> DIRECTIONAL_MAP;
+    private HashMap<String, String> UNIT_MAP;
 
     private String STATE_REGEX;
 
     public LibraryLoader() {
-        STATE_MAP = new HashMap();
-        DIRECTIONAL_MAP = new HashMap();
-        UNIT_MAP = new HashMap();
+        STATE_MAP = new HashMap<String, String>();
+        DIRECTIONAL_MAP = new HashMap<String, String>();
+        UNIT_MAP = new HashMap<String, String>();
 
         this.import_states_data();
         this.loadDirectionalMap();
@@ -101,7 +101,7 @@ public class LibraryLoader {
      * 2. State Regex for searching for states.
      */
     private void import_states_data() {
-        System.out.println(System.getProperty("java.class.path"));
+        //System.out.println(System.getProperty("java.class.path"));
         try {
             // This was a PAIN-make sure the target file IS IN THE TARGET CLASSES!
             BufferedReader reader = new BufferedReader(
@@ -115,7 +115,7 @@ public class LibraryLoader {
                 lineItems = line.split(":");
                 if (lineItems[0].length() == 2) {
                     this.STATE_MAP.put(lineItems[0], lineItems[0]);
-                    STATE_MAP.put(lineItems[1], lineItems[0]);
+                    this.STATE_MAP.put(lineItems[1], lineItems[0]);
                 }
             }
 
@@ -125,7 +125,6 @@ public class LibraryLoader {
                 Map.Entry pair = (Map.Entry)it.next();
                 sb.append(pair.getKey());
                 if (it.hasNext()) {sb.append("|");}
-                it.remove();
             }
 
             this.STATE_REGEX = "\\s(" + sb.toString() + ")$";
@@ -138,15 +137,15 @@ public class LibraryLoader {
         }
     }
 
-    public HashMap getSTATE_MAP() {
+    public HashMap<String, String> getSTATE_MAP() {
         return STATE_MAP;
     }
 
-    public HashMap getDIRECTIONAL_MAP() {
+    public HashMap<String, String> getDIRECTIONAL_MAP() {
         return DIRECTIONAL_MAP;
     }
 
-    public HashMap getUNIT_MAP() {
+    public HashMap<String, String> getUNIT_MAP() {
         return UNIT_MAP;
     }
 
