@@ -14,7 +14,7 @@ import java.util.List;
  * Created by tauren on 3/25/15.
  */
 @RestController
-@RequestMapping("/api/places")
+@RequestMapping("/api/place")
 public class PlaceController {
 
     @Autowired

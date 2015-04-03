@@ -44,19 +44,19 @@ public class Geocoder {
         // Try and remove City From Address - while finding place candidates
         addressResult = this.geocodeCity(addressResult);
 
-        /*
-        // If intersection
+
+        if (addressResult.getAddress().getCity() == null) {
+            // return City Data
+        }
         if (address.getIntersectionFlag() == true) {
             System.out.println("Address is an intersection!");
             // Return something
         }
-        // If PO Box
         if (address.getPoBox() != null) {
             System.out.println("Address is a PO Box!");
-            // Geocode City/Place
+            // return City Data
         }
-        */
-        // GEOCODE ADDRESS
+
 
         return addressResult.getAddress();
     }
