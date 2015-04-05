@@ -25,18 +25,7 @@ public interface PlaceRepository extends CrudRepository<Place, Integer> {
             "AND  levenshtein(place, ?#{[0]}) <= 3;", nativeQuery = true)
     List<Object[]> findPlaceByCity(String city);
 
-    /*
-    @Query(value= "SELECT place.id, place.zip, place.place, place.name1, levenshtein(place.place, x.city) " +
-            "FROM place JOIN ( VALUES " +
-            " (?1, ?2) )" +
-            "AS x (city, city_dmetaphone) " +
-            "ON dmetaphone(place.place) = x.city_dmetaphone "
-            //"WHERE levenshtein(place.place, x.city) <= 3;"
-            , nativeQuery=true)
-    */
-    // @Query(value= "SELECT id, zip, place, name1, levenshtein(place,?#{[0]} ) FROM Place WHERE place = ?#{[0]} or place = ?#{[1]}  ;", nativeQuery = true)
-    // @Query(value= "SELECT id, zip, place, name1, levenshtein(place,?#{[0]} ) FROM Place WHERE place IN ( ?#{[0]} , ?#{[1]} )  ;", nativeQuery = true)
-    @Query(value= "SELECT DISTINCT place.id, place.zip, place.place, place.name1, levenshtein(place.place, x.city), length(place.place) " +
+  @Query(value= "SELECT DISTINCT place.id, place.zip, place.place, place.name1, levenshtein(place.place, x.city), length(place.place) " +
             "FROM place JOIN ( VALUES " +
             " ( ?#{[0]} , ?#{[1]} ), " +
             " ( ?#{[2]} , ?#{[3]} ), " +

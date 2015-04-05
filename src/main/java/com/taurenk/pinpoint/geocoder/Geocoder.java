@@ -62,6 +62,11 @@ public class Geocoder {
     }
 
 
+    private AddressResult geocodeStreet(AddressResult addressResult) {
+
+        return null;
+    }
+
     /**
      * The idea here is to remove the city from the street string.
      * @param addressResult

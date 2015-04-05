@@ -1,5 +1,6 @@
 package com.taurenk.pinpoint.controller;
 
+import com.taurenk.pinpoint.geocoder.Address;
 import com.taurenk.pinpoint.model.AddrFeat;
 import com.taurenk.pinpoint.model.Place;
 import com.taurenk.pinpoint.service.AddrFeatService;
@@ -22,6 +23,11 @@ public class AddrFeatController {
 
     @RequestMapping("/byFullname")
     public List<AddrFeat> byFullname(@RequestParam(value="fullname") String fullname) {
-        return  addrFeatService.getByFullname(fullname);
+      return  addrFeatService.getByFullname(fullname);
+    }
+
+    @RequestMapping("/test")
+    public List<AddrFeat> test() {
+            return this.addrFeatService.fuzzySearchByName("CAPUTO DR", "11949", "11949");
     }
 }

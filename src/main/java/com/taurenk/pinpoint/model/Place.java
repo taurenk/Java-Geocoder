@@ -47,15 +47,7 @@ public class Place {
     public String getState() {
         return state;
     }
-
-    public int getStringDistance() {
-        return stringDistance;
-    }
-
-    public void setStringDistance(String distance) {
-        this.stringDistance = Integer.parseInt(distance);
-    }
-
+    
     public void setId(Integer id) {
         Id = id;
     }

@@ -24,7 +24,7 @@ PinPoint is run on Spring Boot. Will document this in depth later.
 7. Geocode Highest Ranked Candidate
 
 
-<h4>City Search</h4>
+<h4>City Geocoder</h4>
 1. Search Places for given Zipcode.
     - If place.city EXACTLY matches a potential city -> found.
     - If place.city FUZZY matches a potential city -> found?
@@ -33,3 +33,12 @@ PinPoint is run on Spring Boot. Will document this in depth later.
     - Find and extract out city
         - Metaphone Match
         - String Distance match
+
+
+<h4>Street Geocoder</h4>
+1. Post Parse Street Address [Potentially]
+    - Strip out pre/post types
+    - Strip out pre/post directionals
+2. Query DB for potential addresses
+3. Rank
+    -
