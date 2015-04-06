@@ -1,7 +1,9 @@
 package com.taurenk.pinpoint.geocoder;
 
+import com.taurenk.pinpoint.model.AddrFeat;
 import com.taurenk.pinpoint.model.Place;
 import com.taurenk.pinpoint.repository.PlaceRepository;
+import com.taurenk.pinpoint.service.AddrFeatService;
 import com.taurenk.pinpoint.service.PlaceService;
 import org.apache.commons.codec.language.DoubleMetaphone;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class Geocoder {
 
     @Autowired
     private PlaceService placeService;
+
+    @Autowired
+    private AddrFeatService addrFeatService;
 
     public Geocoder() {
         parser = new AddressParser();
@@ -63,6 +68,9 @@ public class Geocoder {
 
 
     private AddressResult geocodeStreet(AddressResult addressResult) {
+        //Geocode street by street + zip
+        List<AddrFeat> candidates = new ArrayList<AddrFeat>();
+
 
         return null;
     }

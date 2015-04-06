@@ -40,6 +40,12 @@ public class MultiLineStringTESTER {
     public static void main(String[] args) {
         MultiLineStringTESTER mst = new MultiLineStringTESTER();
         System.out.println("New MLS: " + mst.multiLineString.toString());
+        String testString = "MULTILINESTRING((-72.793879 40.859169,-72.79388 40.858932,-72.793827 40.858744,-72.793757 40.858599," +
+                "-72.793414 40.858028,-72.793338 40.857868,-72.793293 40.857733,-72.793284 40.85759,-72.793383 40.85699,-72.793369 40.856883," +
+                "-72.793323 40.856804,-72.793247 40.856739,-72.793125 40.856705,-72.792574 40.856646))";
+
+        MultiLineString mls = new GeometryHelper().stringToMultiLineString(testString);
+        System.out.println("Converted:" + mls.toText()); // NULL POINTER EXCEPTION
 
     }
 

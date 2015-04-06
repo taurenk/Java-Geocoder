@@ -5,4 +5,5 @@ package com.taurenk.pinpoint.geocoder;
  */
 public class GeocodeStreet {
 
+
 }

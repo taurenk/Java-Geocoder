@@ -1,5 +1,6 @@
 package com.taurenk.pinpoint.service;
 
+import com.taurenk.pinpoint.geocoder.library.GeometryHelper;
 import com.taurenk.pinpoint.model.AddrFeat;
 import com.taurenk.pinpoint.repository.AddrFeatRepository;
 
@@ -9,6 +10,7 @@ import com.vividsolutions.jts.geom.impl.PackedCoordinateSequence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.invoke.MutableCallSite;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,60 +50,27 @@ public class AddrFeatService {
         for (Object[] result : objectList) {
             AddrFeat addrFeat = new AddrFeat();
 
-            //gid, tlid, fullname, levenshtein(fullname, ?#{[0]} ), name, " +
-            //"zipl, zipr, state, lfromhn, ltohn, rfromhn, rtohn, geom
-
+            // Convert all result objects to their respected types and set AddrFeat object.
             addrFeat.setGid((Integer) result[0]);
-            addrFeat.setFullname( (String) result[2]);
-            //addrFeat.setTlid((String)result[1]);
-
-
-            /*
-            addrFeat.setLfromhn((String) result[5]);
-            addrFeat.setLtohn((String) result[6]);
-
-            addrFeat.setRfromhn((String) result[7]);
-            addrFeat.setRtohn((String) result[8]);
-
-            addrFeat.setZipl((String) result[9]);
-            addrFeat.setZipr((String) result[10]);
-               */
-            //addrFeat.setState((String) result[7]);
-
-            //String geom = this.convertGeomToString( (String)result[12]);
-            addrFeat.setGeom( this.convertGeomToString("demo") );
+            addrFeat.setFullname((String) result[2]);
+            addrFeat.setName((String) result[4]);
+            addrFeat.setZipl((String) result[5]);
+            addrFeat.setZipr((String) result[6]);
+            addrFeat.setState((String) result[7]);
+            addrFeat.setLtohn((String) result[8]);
+            addrFeat.setLtohn((String) result[9]);
+            addrFeat.setRfromhn((String) result[10]);
+            addrFeat.setRtohn((String) result[11]);
+            // Todo: Do we really want to do this for *every* AddrFeat found?
+            MultiLineString mls = new GeometryHelper().stringToMultiLineString( (String)result[12] );
+            addrFeat.setGeom( mls );
 
             addrFeatList.add(addrFeat);
-            System.out.println("\tADDR FEAT: " + addrFeat.getFullname() );
 
         }
         return addrFeatList;
     }
 
-    private MultiLineString convertGeomToString(String geometryAsText) {
-
-        GeometryFactory gm = new GeometryFactory();
-
-        LineString[] lines = new LineString[2];
-        lines[0] = this.lineStringCreator();
-        lines[1] = this.lineStringCreator();
-
-        return gm.createMultiLineString(lines);
-    }
-
-
-    // Create LineString..
-    private LineString lineStringCreator() {
-        //int numCoords = getRandomNumCoords(2);
-        Double x = 123.123;
-        Double y = 321.321;
-        Double x1 = 345.123;
-        Double y1 = 543.321;
-        Coordinate[] coordinates = new Coordinate[2];
-        coordinates[0] = new Coordinate(x,y);
-        coordinates[1] = new Coordinate(x1,y1);
-        return new GeometryFactory().createLineString(coordinates);
-    }
 
 }
 

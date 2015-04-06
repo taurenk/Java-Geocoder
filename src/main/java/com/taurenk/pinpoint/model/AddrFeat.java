@@ -22,7 +22,7 @@ public class AddrFeat {
     @Id
     private int gid;
 
-    private String tlid;
+    private Double tlid;
 
     private String fullname;
 
@@ -54,11 +54,11 @@ public class AddrFeat {
         this.gid = gid;
     }
 
-    public String getTlid() {
+    public Double getTlid() {
         return tlid;
     }
 
-    public void setTlid(String tlid) {
+    public void setTlid(Double tlid) {
         this.tlid = tlid;
     }
 
@@ -136,8 +136,7 @@ public class AddrFeat {
 
 
     public String getGeom() {
-        return Double.toString(this.geom.getLength());
-        //return this.geom.toString();
+        return this.geom.toString();
     }
     public void setGeom(MultiLineString geom) {
         this.geom = geom;
