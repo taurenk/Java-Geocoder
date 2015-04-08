@@ -2,18 +2,13 @@ package com.taurenk.pinpoint.geocoder;
 
 import com.taurenk.pinpoint.model.AddrFeat;
 import com.taurenk.pinpoint.model.Place;
-import com.taurenk.pinpoint.repository.PlaceRepository;
 import com.taurenk.pinpoint.service.AddrFeatService;
 import com.taurenk.pinpoint.service.PlaceService;
-import org.apache.commons.codec.language.DoubleMetaphone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by tauren on 3/25/15.
@@ -21,16 +16,15 @@ import java.util.regex.Pattern;
 @Component
 public class Geocoder {
 
-    private AddressParser parser;
+    private PreParser parser;
 
     @Autowired
     private PlaceService placeService;
-
     @Autowired
     private AddrFeatService addrFeatService;
 
     public Geocoder() {
-        parser = new AddressParser();
+        parser = new PreParser();
     }
 
 
@@ -62,16 +56,21 @@ public class Geocoder {
             // return City Data
         }
 
-
+        System.out.println("Geocoding Street:" + addressResult.getAddress().getStreet());
+        this.geocodeStreet(addressResult);
         return addressResult.getAddress();
     }
 
 
     private AddressResult geocodeStreet(AddressResult addressResult) {
         //Geocode street by street + zip
+        Address address = addressResult.getAddress();
         List<AddrFeat> candidates = new ArrayList<AddrFeat>();
+        candidates.addAll(addrFeatService.fuzzySearchByName(address.getStreet(), address.getZip(), address.getZip()));
 
-
+        for (AddrFeat feat : candidates) {
+            System.out.println("Candidate:" + feat.getName() );
+        }
         return null;
     }
 
@@ -92,7 +91,7 @@ public class Geocoder {
 
             if (addressResult.getAddress().getCity() == null) {
                 // try a more 'fuzzier' match based on city tokens.
-                List<Place> placeList = placeService.placesByCityList(addressResult.getStreetTokens(), address.getState());
+                List<Place> placeList = placeService.placesByCityList(addressResult.getCityTokens(), address.getState());
                 if (placeList != null) {
                     addressResult = cityGeocoder.geocodeByCity(placeList, addressResult);
                 }

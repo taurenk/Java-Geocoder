@@ -1,10 +1,7 @@
 package com.taurenk.pinpoint.geocoder;
 
 import com.taurenk.pinpoint.model.Place;
-import com.taurenk.pinpoint.service.PlaceService;
 import org.apache.commons.codec.language.DoubleMetaphone;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -17,7 +14,7 @@ public class GeocodeCity {
 
     public AddressResult geocodeByZip(Place place, AddressResult addressResult) {
         addressResult.addPotentialPlace(place);
-        for (String potentialCity: addressResult.getStreetTokens() ){
+        for (String potentialCity: addressResult.getCityTokens() ){
             String stringToReplace = this.findCity(potentialCity, place.getCity());
             if (stringToReplace != null) {
                 addressResult = this.setCityData(addressResult, stringToReplace, potentialCity);
@@ -30,7 +27,7 @@ public class GeocodeCity {
     public AddressResult geocodeByCity(List<Place> placeList, AddressResult addressResult) {
         outerloop:
         for (Place potentialPlace : placeList) {
-            for (String s : addressResult.getStreetTokens()){
+            for (String s : addressResult.getCityTokens()){
                 String stringToReplace = this.findCity(s, potentialPlace.getCity());
                 if (stringToReplace != null) {
                     addressResult = this.setCityData(addressResult, stringToReplace, potentialPlace.getCity());

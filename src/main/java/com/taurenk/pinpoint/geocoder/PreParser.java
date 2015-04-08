@@ -9,16 +9,16 @@ import java.util.regex.Pattern;
 
 /**
  * Created by tauren on 3/25/15.
- * AddressParser takes in a string and converts it into
+ * PreParser takes in a string and converts it into
  * an Address object via pre-parsing algorithm:finding Number, State, Zip, potential City.
  *
  */
-public class AddressParser {
+public class PreParser {
 
     Address address;
     AddressUtilities addressUtilities;
 
-    public AddressParser() {
+    public PreParser() {
         this.addressUtilities = new AddressUtilities();
     }
 
@@ -102,8 +102,8 @@ public class AddressParser {
             // Standardize State to State Code
             String state = m.group(0).trim().toString();
 
-            if ( addressUtilities.getState_map().containsKey(state) )  {
-                state = addressUtilities.getState_map().get(state);
+            if ( addressUtilities.getSTATE_MAP().containsKey(state) )  {
+                state = addressUtilities.getSTATE_MAP().get(state);
             }
             this.address.setState(state);
             addressString = addressString.replace(m.group(0), "");

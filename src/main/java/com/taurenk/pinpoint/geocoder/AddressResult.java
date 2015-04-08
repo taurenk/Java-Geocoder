@@ -1,5 +1,6 @@
 package com.taurenk.pinpoint.geocoder;
 
+import com.taurenk.pinpoint.model.AddrFeat;
 import com.taurenk.pinpoint.model.Place;
 
 import java.util.ArrayList;
@@ -7,16 +8,22 @@ import java.util.List;
 
 /**
  * Created by tauren on 3/31/15.
+ *
  */
 public class AddressResult {
 
     private Address address;
+
     private List<Place> potentialPlaces;
+    private List<AddrFeat> potentialAddresses;
+
+    private List<String> cityTokens;
     private List<String> streetTokens;
+
 
     public AddressResult(Address address) {
         this.address = address;
-        this.streetTokens = this.extractPotentialCities(address.getStreet());
+        this.cityTokens = this.extractCityTokens(address.getStreet());
         potentialPlaces = new ArrayList<Place>();
     }
 
@@ -38,12 +45,12 @@ public class AddressResult {
 
     public void addPotentialPlace(Place place) { this.potentialPlaces.add(place); }
 
-    public List<String> getStreetTokens() {
-        return streetTokens;
+    public List<String> getCityTokens() {
+        return cityTokens;
     }
 
-    public void setStreetTokens(List<String> streetTokens) {
-        this.streetTokens = streetTokens;
+    public void setCityTokens(List<String> cityTokens) {
+        this.cityTokens = cityTokens;
     }
 
     /**
@@ -51,7 +58,7 @@ public class AddressResult {
      * Average US cities are of length 1,2, 3 words.
      * @param addressString
      */
-    private List<String> extractPotentialCities(String addressString) {
+    private List<String> extractCityTokens(String addressString) {
         List<String> potentialCities = new ArrayList();
         String list[] = addressString.split(" ");
         if (list.length >=3) { potentialCities.add(list[list.length-3] + " " +
@@ -61,4 +68,5 @@ public class AddressResult {
         if (list.length >=1) { potentialCities.add( list[(list.length-1)]  ); }
         return potentialCities;
     }
+
 }
