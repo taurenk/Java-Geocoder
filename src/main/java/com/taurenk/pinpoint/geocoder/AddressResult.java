@@ -14,7 +14,8 @@ public class AddressResult {
 
     private Address address;
 
-    private List<Place> potentialPlaces;
+    private List<Place> potentialPlaces; // This is unused...
+    private List<String> potentialZips;
     private List<AddrFeat> potentialAddresses;
 
     private List<String> cityTokens;
@@ -25,6 +26,7 @@ public class AddressResult {
         this.address = address;
         this.cityTokens = this.extractCityTokens(address.getStreet());
         potentialPlaces = new ArrayList<Place>();
+        this.potentialZips = new ArrayList<String>();
     }
 
     public Address getAddress() {
@@ -52,6 +54,10 @@ public class AddressResult {
     public void setCityTokens(List<String> cityTokens) {
         this.cityTokens = cityTokens;
     }
+
+    public List<String> getPotentialZips() { return this.potentialZips; }
+
+    public void addPotentialZips(String zipcode) { this.potentialZips.add(zipcode); }
 
     /**
      * Attempt to find potential city strings by parsing out remaining strings in address.

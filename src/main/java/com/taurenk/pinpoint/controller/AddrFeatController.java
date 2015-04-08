@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +29,10 @@ public class AddrFeatController {
 
     @RequestMapping("/test")
     public List<AddrFeat> test() {
-            return this.addrFeatService.fuzzySearchByName("CAPUTO DR", "11949", "11949");
+        List<String> zipList = new ArrayList();
+        zipList.add("10707");
+        zipList.add("11949");
+        //return this.addrFeatService.findByNameZip("ELM ST", zipList);
+        return this.addrFeatService.findFuzzy_NameZip("ELM ST", zipList);
     }
 }

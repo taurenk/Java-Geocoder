@@ -12,8 +12,15 @@ import java.util.List;
 public class GeocodeCity {
 
 
+    /**
+     * given a potential zipcode, query db to find matches based on the zipcode.
+     * @param place
+     * @param addressResult
+     * @return
+     */
     public AddressResult geocodeByZip(Place place, AddressResult addressResult) {
         addressResult.addPotentialPlace(place);
+        addressResult.addPotentialZips(place.getZip());
         for (String potentialCity: addressResult.getCityTokens() ){
             String stringToReplace = this.findCity(potentialCity, place.getCity());
             if (stringToReplace != null) {
@@ -24,14 +31,22 @@ public class GeocodeCity {
     }
 
 
+    /**
+     * Given a list of potential cities, query DB to find matches based on the metaphone calculation of the list items.
+     * @param placeList
+     * @param addressResult
+     * @return addressResult
+     */
     public AddressResult geocodeByCity(List<Place> placeList, AddressResult addressResult) {
         outerloop:
         for (Place potentialPlace : placeList) {
+            addressResult.addPotentialPlace(potentialPlace);
+            addressResult.addPotentialZips(potentialPlace.getZip());
             for (String s : addressResult.getCityTokens()){
                 String stringToReplace = this.findCity(s, potentialPlace.getCity());
                 if (stringToReplace != null) {
                     addressResult = this.setCityData(addressResult, stringToReplace, potentialPlace.getCity());
-                    addressResult.addPotentialPlace(potentialPlace);
+                    // addressResult.addPotentialPlace(potentialPlace);
                     break outerloop;
                 }
             }

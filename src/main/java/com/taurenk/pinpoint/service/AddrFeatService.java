@@ -7,6 +7,7 @@ import com.taurenk.pinpoint.repository.AddrFeatRepository;
 import com.vividsolutions.jts.geom.*;
 
 import com.vividsolutions.jts.geom.impl.PackedCoordinateSequence;
+import org.apache.commons.codec.language.DoubleMetaphone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,16 +27,13 @@ public class AddrFeatService {
     public List<AddrFeat> getByFullname(String fullname) { return this.addrFeatRepository.findByFullname(fullname); }
 
 
-    /**
-     * Query Address Feature by name, left zipcode, and right zipcode.
-     * @param fullname
-     * @param zipl
-     * @param zipr
-     * @return
-     */
-    public List<AddrFeat> fuzzySearchByName(String fullname, String zipl, String zipr) {
-        //List<Object[]>  resultList = this.addrFeatRepository.fuzzySearchByName(fullname, zipl, zipr);
-        List<Object[]>  resultList = this.addrFeatRepository.fuzzySearchByName(fullname);
+    public List<AddrFeat> findByNameZip(String fullname, List<String> zipList) {
+        List<Object[]> resultList = this.addrFeatRepository.findByNameZip(fullname, zipList);
+        return this.objectToAddrFeat(resultList);
+    }
+
+    public List<AddrFeat> findFuzzy_NameZip(String fullname, List<String> zipList) {
+         List<Object[]> resultList = this.addrFeatRepository.findFuzzy_NameZip(fullname, zipList);
         return this.objectToAddrFeat(resultList);
     }
 

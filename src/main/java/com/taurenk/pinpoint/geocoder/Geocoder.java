@@ -66,18 +66,25 @@ public class Geocoder {
     }
 
 
+    /**
+     * Idea here is to find matches based on street/zipcode combinations
+     * and then rank them...
+     * @param addressResult
+     * @return
+     */
     private AddressResult geocodeStreet(AddressResult addressResult) {
         //Geocode street by street + zip
         addressResult = postParser.postParse(addressResult);
         Address address = addressResult.getAddress();
 
-
-        List<AddrFeat> candidates = new ArrayList();
-        candidates.addAll(addrFeatService.fuzzySearchByName(address.getStreet(), address.getZip(), address.getZip()));
+        //List<String> zipList = new ArrayList<String>(); //Todo: find 'potential' zipcodes
+        //zipList.add(address.getZip());
+        List<AddrFeat> candidates = addrFeatService.findFuzzy_NameZip(address.getStreet(), addressResult.getPotentialZips());
 
         for (AddrFeat feat : candidates) {
             System.out.println("Candidate:" + feat.getFullname() + "|" + feat.getState()  + "|" + feat.getZipl());
         }
+
         return null;
     }
 

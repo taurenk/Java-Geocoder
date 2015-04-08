@@ -24,7 +24,7 @@ public class Address {
 
     private double lat;
     private double lon;
-
+    
     public Address(String addressString) {
         this.addressString = addressString;
     }
