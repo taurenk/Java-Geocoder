@@ -39,7 +39,7 @@ public class AddressUtilities {
         this.STATE_MAP = DataSets.getStateMap();
         this.DIRECTIONAL_MAP = DataSets.getDirectionalMap();
         this.STREET_TYPE_MAP = DataSets.getStreetTypeMap();
-        this.stateRegex = Pattern.compile(this.build_state_regex());
+        this.stateRegex = Pattern.compile("\\s(" + this.build_state_regex() + ")$");
     }
 
     /**

@@ -36,7 +36,6 @@ public class AddrFeatService {
     public List<AddrFeat> fuzzySearchByName(String fullname, String zipl, String zipr) {
         //List<Object[]>  resultList = this.addrFeatRepository.fuzzySearchByName(fullname, zipl, zipr);
         List<Object[]>  resultList = this.addrFeatRepository.fuzzySearchByName(fullname);
-        System.out.println("HERE");
         return this.objectToAddrFeat(resultList);
     }
 

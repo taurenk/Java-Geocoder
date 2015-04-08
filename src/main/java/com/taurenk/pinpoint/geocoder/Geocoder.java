@@ -16,7 +16,8 @@ import java.util.List;
 @Component
 public class Geocoder {
 
-    private PreParser parser;
+    private PreParser preParser;
+    private PostParser postParser;
 
     @Autowired
     private PlaceService placeService;
@@ -24,7 +25,8 @@ public class Geocoder {
     private AddrFeatService addrFeatService;
 
     public Geocoder() {
-        parser = new PreParser();
+        preParser = new PreParser();
+        postParser = new PostParser();
     }
 
 
@@ -35,9 +37,12 @@ public class Geocoder {
      * @return
      */
     public Address geocode(String addrString){
-        parser.preParse(addrString);
+        // TODO: unhook address and preparser...
+        preParser.preParse(addrString);
+
         // Parse address string into Address Object
-        Address address = parser.address;
+        Address address = preParser.address;
+
         // Build a new address results object
         AddressResult addressResult = new AddressResult(address);
         // Try and remove City From Address - while finding place candidates
@@ -56,7 +61,6 @@ public class Geocoder {
             // return City Data
         }
 
-        System.out.println("Geocoding Street:" + addressResult.getAddress().getStreet());
         this.geocodeStreet(addressResult);
         return addressResult.getAddress();
     }
@@ -64,12 +68,15 @@ public class Geocoder {
 
     private AddressResult geocodeStreet(AddressResult addressResult) {
         //Geocode street by street + zip
+        addressResult = postParser.postParse(addressResult);
         Address address = addressResult.getAddress();
-        List<AddrFeat> candidates = new ArrayList<AddrFeat>();
+
+
+        List<AddrFeat> candidates = new ArrayList();
         candidates.addAll(addrFeatService.fuzzySearchByName(address.getStreet(), address.getZip(), address.getZip()));
 
         for (AddrFeat feat : candidates) {
-            System.out.println("Candidate:" + feat.getName() );
+            System.out.println("Candidate:" + feat.getFullname() + "|" + feat.getState()  + "|" + feat.getZipl());
         }
         return null;
     }
