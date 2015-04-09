@@ -50,6 +50,7 @@ public class AddrFeatService {
             // Convert all result objects to their respected types and set AddrFeat object.
             addrFeat.setGid((Integer) result[0]);
             addrFeat.setFullname((String) result[2]);
+            addrFeat.setStringDistance((Integer) result[3]);
             addrFeat.setName((String) result[4]);
             addrFeat.setZipl((String) result[5]);
             addrFeat.setZipr((String) result[6]);

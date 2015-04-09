@@ -82,7 +82,7 @@ public class Geocoder {
         List<AddrFeat> candidates = addrFeatService.findFuzzy_NameZip(address.getStreet(), addressResult.getPotentialZips());
 
         for (AddrFeat feat : candidates) {
-            System.out.println("Candidate:" + feat.getFullname() + "|" + feat.getState()  + "|" + feat.getZipl());
+            System.out.println("Candidate:" + feat.getFullname() + "|" + feat.getState()  + "|" + feat.getZipl() + "| Score: " + feat.getStringDistance());
         }
 
         return null;

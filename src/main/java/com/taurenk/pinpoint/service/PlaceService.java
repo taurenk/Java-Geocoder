@@ -61,7 +61,6 @@ public class PlaceService {
      * @return List<Place> places
      */
     private List<Place> objectToPlace(List<Object[]> objectList) {
-        System.out.println("Converting Objects to Place: " + objectList.size());
         List<Place> places = new ArrayList();
         for (Object[] result : objectList) {
             Place place = new Place();
@@ -71,7 +70,6 @@ public class PlaceService {
             place.setState((String)result[3]);
             place.setStringDistance((Integer)result[4]);
             places.add(place);
-            System.out.println("\tPlaceZip=" + place.getZip());
         }
         return places;
     }

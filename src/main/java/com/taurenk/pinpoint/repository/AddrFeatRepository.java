@@ -33,4 +33,5 @@ public interface AddrFeatRepository extends CrudRepository<AddrFeat, Integer> {
             "AND ( zipl in  ( :ziplist ) OR zipr in ( :ziplist) )" +
             "AND ( levenshtein(fullname, :test ) <= 2 ); ", nativeQuery=true)
     List<Object[]> findFuzzy_NameZip(@Param("test") String street, @Param("ziplist") List<String> zipList);
+
 }

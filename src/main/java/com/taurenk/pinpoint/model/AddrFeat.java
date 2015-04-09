@@ -37,7 +37,6 @@ public class AddrFeat {
     private String state;
     private String name;
 
-
     @Type(type="org.hibernate.spatial.GeometryType")
     private MultiLineString geom;
 
