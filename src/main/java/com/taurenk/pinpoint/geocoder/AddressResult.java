@@ -14,7 +14,7 @@ public class AddressResult {
 
     private Address address;
 
-    private List<Place> potentialPlaces; // This is unused...
+    private List<Place> potentialPlaces;
     private List<String> potentialZips;
     private List<AddrFeat> potentialAddresses;
 

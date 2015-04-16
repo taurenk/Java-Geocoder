@@ -37,7 +37,7 @@ public class Geocoder {
      * @return
      */
     public Address geocode(String addrString){
-        // TODO: unhook address and preparser...
+        // TODO: Rethink the "geocode city" peice.
         preParser.preParse(addrString);
 
         // Parse address string into Address Object
@@ -45,12 +45,13 @@ public class Geocoder {
 
         // Build a new address results object
         AddressResult addressResult = new AddressResult(address);
+
         // Try and remove City From Address - while finding place candidates
         addressResult = this.geocodeCity(addressResult);
 
 
         if (addressResult.getAddress().getCity() == null) {
-            // return City Data
+
         }
         if (address.getIntersectionFlag() == true) {
             System.out.println("Address is an intersection!");
@@ -67,29 +68,35 @@ public class Geocoder {
 
 
     /**
-     * Idea here is to find matches based on street/zipcode combinations
-     * and then rank them...
+     * Using an Address and Potential zipcodes, Query DB to try and find street level address candidates.
+     * Send candidates to ranking algorithm to figure out top candidate.
      * @param addressResult
      * @return
      */
     private AddressResult geocodeStreet(AddressResult addressResult) {
-        //Geocode street by street + zip
+
+        // Do some string manipulating
         addressResult = postParser.postParse(addressResult);
         Address address = addressResult.getAddress();
 
-        //List<String> zipList = new ArrayList<String>(); //Todo: find 'potential' zipcodes
-        //zipList.add(address.getZip());
-        List<AddrFeat> candidates = addrFeatService.findFuzzy_NameZip(address.getStreet(), addressResult.getPotentialZips());
+        //
+        List<AddrFeat> candidates = addrFeatService.findFuzzy_NameZip(address.getStreet(),
+                                                            addressResult.getPotentialZips());
+        // Send AddressResult to ranking
+        if (candidates.size() > 0) {
+            addressResult = new RankAlgo().rankCandidates(addressResult, candidates);
+            // Insert new data into address from top AddrFeat
 
-        for (AddrFeat feat : candidates) {
-            System.out.println("Candidate:" + feat.getFullname() + "|" + feat.getState()  + "|" + feat.getZipl() + "| Score: " + feat.getStringDistance());
+        } else {
+            // What do we want to do here?
         }
-
         return null;
     }
 
     /**
      * The idea here is to remove the city from the street string.
+     * TODO: We want to RANK the potential cities....?
+     *
      * @param addressResult
      * @return
      */

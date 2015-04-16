@@ -24,12 +24,17 @@ public class Address {
 
     private double lat;
     private double lon;
-    
+
+    private String geocodeLevel;
+
     public Address(String addressString) {
         this.addressString = addressString;
     }
 
 
+    public String getGeocodeLevel() { return this.geocodeLevel; }
+
+    public void setGecodeLevel(String level) { this.geocodeLevel = level; }
 
     public double getLat() {
         return lat;

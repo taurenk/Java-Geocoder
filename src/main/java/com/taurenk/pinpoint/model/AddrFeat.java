@@ -25,17 +25,18 @@ public class AddrFeat {
     private Double tlid;
 
     private String fullname;
+    private String name;
 
     private String lfromhn;
-
     private String ltohn;
 
     private String rfromhn;
     private String rtohn;
+
     private String zipl;
     private String zipr;
+
     private String state;
-    private String name;
 
     @Type(type="org.hibernate.spatial.GeometryType")
     private MultiLineString geom;
@@ -43,6 +44,17 @@ public class AddrFeat {
     @Transient
     private int stringDistance;
 
+    @Transient
+    private Double rankScore;
+
+
+    public Double getRankScore() {
+        return rankScore;
+    }
+
+    public void setRankScore(Double rankScore) {
+        this.rankScore = rankScore;
+    }
 
 
     public int getGid() {
@@ -146,5 +158,7 @@ public class AddrFeat {
     public int getStringDistance() {
         return stringDistance;
     }
+
+
 
 }
