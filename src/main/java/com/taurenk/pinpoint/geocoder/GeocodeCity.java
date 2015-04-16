@@ -66,7 +66,14 @@ public class GeocodeCity {
     public AddressResult setCityData(AddressResult addressResult, String stringToReplace, String city ) {
         Address address = addressResult.getAddress();
         address.setCity(city);
-        String newStreet = address.getStreet().replaceAll("\\s(" + stringToReplace + ")$","");
+        // TEST 04/16/2015: Take out spacing in front of
+        String newStreet;
+        if (address.getStreet().length() == stringToReplace.length() ) {
+            newStreet = address.getStreet().replaceAll("(" + stringToReplace + ")$","");
+        } else {
+            newStreet = address.getStreet().replaceAll("\\s(" + stringToReplace + ")$","");
+        }
+
         address.setStreet(newStreet);
         addressResult.setAddress(address);
         return addressResult;

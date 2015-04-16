@@ -32,6 +32,29 @@ public class Place {
     @Transient
     private int stringDistance;
 
+    @Transient
+    private Double score;
+
+    public Double getScore() {
+        return score;
+    }
+
+    public void setScore(Double score) {
+        this.score = score;
+    }
+
+    public int getStringDistance() {
+        return stringDistance;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
     public Integer getId() {
         return Id;
     }

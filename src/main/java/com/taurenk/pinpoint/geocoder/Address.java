@@ -20,6 +20,8 @@ public class Address {
     private String zip;
 
     private String poBox;
+
+    @JsonIgnore
     private Boolean intersectionFlag = false;
 
     private double lat;
