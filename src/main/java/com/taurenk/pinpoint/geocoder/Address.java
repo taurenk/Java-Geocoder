@@ -2,6 +2,7 @@ package com.taurenk.pinpoint.geocoder;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.taurenk.pinpoint.model.Place;
 
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.List;
 public class Address {
 
     private String addressString;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String number;
     private String street;
     private String city;
@@ -19,12 +22,17 @@ public class Address {
     private String state;
     private String zip;
 
+    private String sideOfStreet;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String poBox;
 
     @JsonIgnore
     private Boolean intersectionFlag = false;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private double lat;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private double lon;
 
     private String geocodeLevel;
@@ -33,10 +41,23 @@ public class Address {
         this.addressString = addressString;
     }
 
+    public Address(String addressString, String geocodeLevel){
+        this.addressString = addressString;
+        this.geocodeLevel = geocodeLevel;
+    }
+
+
+    public String getSideOfStreet() {
+        return sideOfStreet;
+    }
+
+    public void setSideOfStreet(String sideOfStreet) {
+        this.sideOfStreet = sideOfStreet;
+    }
 
     public String getGeocodeLevel() { return this.geocodeLevel; }
 
-    public void setGecodeLevel(String level) { this.geocodeLevel = level; }
+    public void setGeocodeLevel(String level) { this.geocodeLevel = level; }
 
     public double getLat() {
         return lat;

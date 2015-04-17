@@ -24,7 +24,7 @@ public class AddressUtilities {
     private Pattern stateRegex;
 
     private Pattern intersectionTest = Pattern.compile("\\s(AT|@|AND|&)\\s");
-    private Pattern poBoxRegex = Pattern.compile("\\s(PO BOX|P O BOX|P.O. BOX)(\\s|\\s#|\\s#\\s)(\\d*)");
+    private Pattern poBoxRegex = Pattern.compile("(\\s)?(PO BOX)\\s(\\w+[-]?\\w+)\\s");
 
     // US Address Standards Map
 

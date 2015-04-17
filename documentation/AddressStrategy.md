@@ -41,4 +41,11 @@ PinPoint is run on Spring Boot. Will document this in depth later.
     - Strip out pre/post directionals
 2. Query DB for potential addresses
 3. Rank
-    -
+    
+<h4>Geocode Levels</h4>
+There are currently 4 levels of geocode 'accuracy', as seen below. description is in brackets:
+0 - No Match Found [PinPoint could not find a match]
+1 - City/Zip Match [PinPoint matched given city/zip code]
+2 - Street Level Match: Street [Found given street, lat/lon places on start of street]
+3 - Street Level Match: Interpolated [Found given street, interpolated potential lat/lon coords]
+

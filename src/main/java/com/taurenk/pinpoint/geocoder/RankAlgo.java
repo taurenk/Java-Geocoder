@@ -13,7 +13,7 @@ import java.util.List;
 public class RankAlgo {
 
 
-    public AddressResult rankCandidates(AddressResult addressResult, List<AddrFeat> candidates) {
+    public List<AddrFeat> rankCandidates(AddressResult addressResult, List<AddrFeat> candidates) {
         Address address = addressResult.getAddress();
 
 
@@ -33,7 +33,7 @@ public class RankAlgo {
             System.out.println("\t" + af.getGid() + "|" + af.getRankScore() + "|"
                         + af.getFullname() + "|" + af.getZipl());
         }
-        return null;
+        return candidates;
     }
 
 

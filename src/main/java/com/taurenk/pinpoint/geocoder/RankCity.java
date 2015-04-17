@@ -40,14 +40,19 @@ public class RankCity {
      */
     private Double simpleScore (Address address,  Place place) {
         Double curr_score = 0.0;
+        // TODO Check if these are null
+
         if (address.getZip().equals(place.getZip())) {
              curr_score += 1;
         }
-        if(address.getCity().equals(place.getCity())) {
-             curr_score += 2;
-        } else if (StringUtils.getLevenshteinDistance(address.getCity(), place.getCity()) <= 2) {
-             curr_score += 1;
+        if (address.getCity() != null) {
+            if(address.getCity().equals(place.getCity())) {
+                curr_score += 2;
+            } else if (StringUtils.getLevenshteinDistance(address.getCity(), place.getCity()) <= 2) {
+                curr_score += 1;
+            }
         }
+
         place.setScore(curr_score);
 
         return curr_score;
