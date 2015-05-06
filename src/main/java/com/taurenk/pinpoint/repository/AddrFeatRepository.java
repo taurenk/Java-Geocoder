@@ -17,7 +17,8 @@ public interface AddrFeatRepository extends CrudRepository<AddrFeat, Integer> {
 
 
     @Query(value="SELECT gid, tlid, fullname, levenshtein(fullname, :test ), name, " +
-            "zipl, zipr, state, lfromhn, ltohn, rfromhn, rtohn, ST_asText(geom) " +
+            "zipl, zipr, state, lfromhn, ltohn, rfromhn, rtohn, ST_asText(geom)," +
+            "lcity, rcity " +
             "FROM addrfeat " +
             "WHERE fullname LIKE :test " +
             "AND ( zipl in  ( :ziplist ) OR zipr in ( :ziplist) )" +
@@ -27,7 +28,8 @@ public interface AddrFeatRepository extends CrudRepository<AddrFeat, Integer> {
 
 
     @Query(value="SELECT gid, tlid, fullname, levenshtein(fullname, :test ), name, " +
-            "zipl, zipr, state, lfromhn, ltohn, rfromhn, rtohn, ST_asText(geom) " +
+            "zipl, zipr, state, lfromhn, ltohn, rfromhn, rtohn, ST_asText(geom), " +
+            "lcity, rcity " +
             "FROM addrfeat " +
             "WHERE dmetaphone(fullname) LIKE dmetaphone( :test )  " +
             "AND ( zipl in  ( :ziplist ) OR zipr in ( :ziplist) )" +

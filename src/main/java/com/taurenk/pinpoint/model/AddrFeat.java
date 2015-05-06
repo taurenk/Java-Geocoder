@@ -36,10 +36,15 @@ public class AddrFeat {
     private String zipl;
     private String zipr;
 
+    private String lcity;
+    private String rcity;
+
     private String state;
+
 
     @Type(type="org.hibernate.spatial.GeometryType")
     private MultiLineString geom;
+
 
     @Transient
     private int stringDistance;
@@ -47,6 +52,8 @@ public class AddrFeat {
     @Transient
     private Double rankScore;
 
+    @Transient
+    private String sideOfStreet;
 
     public Double getRankScore() {
         return rankScore;
@@ -56,6 +63,30 @@ public class AddrFeat {
         this.rankScore = rankScore;
     }
 
+
+    public String getLcity() {
+        return lcity;
+    }
+
+    public void setLcity(String lcity) {
+        this.lcity = lcity;
+    }
+
+    public String getRcity() {
+        return rcity;
+    }
+
+    public void setRcity(String rcity) {
+        this.rcity = rcity;
+    }
+
+    public String getSideOfStreet() {
+        return sideOfStreet;
+    }
+
+    public void setSideOfStreet(String sideOfStreet) {
+        this.sideOfStreet = sideOfStreet;
+    }
 
     public int getGid() {
         return gid;

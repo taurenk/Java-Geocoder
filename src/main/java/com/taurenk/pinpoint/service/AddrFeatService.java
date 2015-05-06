@@ -59,7 +59,10 @@ public class AddrFeatService {
             addrFeat.setLtohn((String) result[9]);
             addrFeat.setRfromhn((String) result[10]);
             addrFeat.setRtohn((String) result[11]);
-            // Todo: Do we really want to do this for *every* AddrFeat found?
+            addrFeat.setLcity((String) result[13]);
+            addrFeat.setRcity((String) result[14]);
+
+            // Todo: probably could hold off timely conversion until interpolation...
             MultiLineString mls = new GeometryHelper().stringToMultiLineString( (String)result[12] );
             addrFeat.setGeom( mls );
 

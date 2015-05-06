@@ -168,9 +168,10 @@ public class Geocoder {
     private Address setAddressWithFeat(Address address, AddrFeat feature) {
         // this is bit tricky maybe. we want to get the zip.city from the Place record
         // but the lat/lon from the AddrFeat
-        address.setCity("TODO");            // TODO: figure out cityleft vs cityright
+        address.setCity(feature.getLcity());            // TODO: figure out cityleft vs cityright
         address.setZip(feature.getZipl()); // TODO: figure out zipl vs zipr
         address.setStreet(feature.getFullname());
+
         //TODO set long/lat?
         return address;
     }
