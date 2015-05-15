@@ -1,5 +1,6 @@
 package com.taurenk.pinpoint.controller;
 
+import com.taurenk.pinpoint.exception.AddrFeatException;
 import com.taurenk.pinpoint.geocoder.Address;
 import com.taurenk.pinpoint.model.AddrFeat;
 import com.taurenk.pinpoint.model.Place;
@@ -24,15 +25,9 @@ public class AddrFeatController {
 
     @RequestMapping("/byFullname")
     public List<AddrFeat> byFullname(@RequestParam(value="fullname") String fullname) {
-      return  addrFeatService.getByFullname(fullname);
+        List<AddrFeat> addrFeatList = addrFeatService.getByFullname(fullname);
+        if (addrFeatList == null ) { throw new AddrFeatException(); }
+        return addrFeatList;
     }
 
-    @RequestMapping("/test")
-    public List<AddrFeat> test() {
-        List<String> zipList = new ArrayList();
-        zipList.add("10707");
-        zipList.add("11949");
-        //return this.addrFeatService.findByNameZip("ELM ST", zipList);
-        return this.addrFeatService.findFuzzy_NameZip("ELM ST", zipList);
-    }
 }

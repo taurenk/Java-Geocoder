@@ -1,11 +1,9 @@
 package com.taurenk.pinpoint.controller;
 
-import com.taurenk.pinpoint.exception.PlaceNotFound;
+
 import com.taurenk.pinpoint.geocoder.Address;
 import com.taurenk.pinpoint.geocoder.Geocoder;
-import com.taurenk.pinpoint.model.Place;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 /**

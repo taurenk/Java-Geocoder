@@ -1,6 +1,6 @@
 package com.taurenk.pinpoint.service;
 
-import com.taurenk.pinpoint.exception.PlaceNotFound;
+import com.taurenk.pinpoint.exception.InternalServerException;
 import com.taurenk.pinpoint.model.Place;
 import com.taurenk.pinpoint.repository.PlaceRepository;
 import org.apache.commons.codec.language.DoubleMetaphone;
@@ -20,13 +20,24 @@ public class PlaceService {
     @Autowired
     private PlaceRepository placeRepository;
 
+    /**
+     * Retrieve place [city] by zip. Zipcodes are assumed to be unique.
+     * @param zip
+     * @return
+     */
+    public Place placeByZip(String zip) {
+        try {
+            Place place = placeRepository.findPlaceByZip(zip);
+        } catch (Exception ex) {
+            System.out.printf("Error in PlaceService: %s\n", ex.toString());
+            throw new InternalServerException();
+        }
 
-
-    public Place placeByZip(String zip){return placeRepository.findPlaceByZip(zip); }
-
+        return placeRepository.findPlaceByZip(zip);
+    }
 
     /**
-     * Retrive a list of potential places based on an entered city String
+     * Retrieve a list of potential places based on an entered city String
      * @param city
      * @return
      */
