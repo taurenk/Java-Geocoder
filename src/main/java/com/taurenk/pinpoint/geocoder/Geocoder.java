@@ -1,5 +1,8 @@
 package com.taurenk.pinpoint.geocoder;
 
+import com.taurenk.pinpoint.exception.AddrFeatException;
+import com.taurenk.pinpoint.exception.AddressNotFoundExcepttion;
+import com.taurenk.pinpoint.exception.PlaceNotFoundException;
 import com.taurenk.pinpoint.model.AddrFeat;
 import com.taurenk.pinpoint.model.Place;
 import com.taurenk.pinpoint.service.AddrFeatService;
@@ -50,7 +53,7 @@ public class Geocoder {
         // Build a new address results object
         AddressResult addressResult = new AddressResult(address);
 
-        // Try and remove City From Address - while finding place candidates
+        // City will be embeded in street string, this will assist in parsing them out
         addressResult = this.geocodeCity(addressResult);
 
 
@@ -58,41 +61,49 @@ public class Geocoder {
         // TODO: Review Scenarios/LOGIC
         // TODO: REORDER THESE SEQUENCES...
 
-        // If PO BOX...
+        // Is Address PO Box? TODO
         if (addressResult.getAddress().getPoBox() != null) {
             System.out.println("Address is a PO Box!");
-            System.out.println("\t# of potential places:" + addressResult.getPotentialPlaces().size());
             if (addressResult.getPotentialPlaces().size() > 0) {
                 address = addressResult.getAddress();
-                address.setGeocodeLevel("TEST"); // THIS IS NOT WORKING...
-                return this.setAddressWithPlace(address, addressResult.getPotentialPlaces().get(0));
+                return null;
             }
         }
 
-        // If city is NEVER FOUND - move this to geocode street...
+        // Is City Found? If no street, return , else geocode.
         if (addressResult.getAddress().getCity() == null) {
-            System.out.println("No City Found, but moving on..");
-            //return new Address(addressResult.getAddress().getAddressString(), LEVELS[0]);
+            if(addressResult.getAddress().getStreet() == null) {
+                return null;
+            }
         }
 
         // If street string is empty, we may have a city/zip to go off of.
         if (addressResult.getAddress().getStreet().equals("")) {
-            System.out.println("HIT no street");
-            System.out.println("\t# of potential places:" + addressResult.getPotentialPlaces().size());
+            System.out.println("No Street Found.");
             if (addressResult.getPotentialPlaces().size() > 0) {
                 address = addressResult.getAddress();
+                // TODO: We want to return a place object here...
                 return this.setAddressWithPlace(address, addressResult.getPotentialPlaces().get(0));
             }
         }
 
         if (address.getIntersectionFlag() == true) {
             System.out.println("Address is an intersection!");
-            // Return something
+            return null;
         }
 
-
-        addressResult = this.geocodeStreet(addressResult);
-
+        try {
+            addressResult = this.geocodeStreet(addressResult);
+        } catch(PlaceNotFoundException placeException) {
+            //TODO: log
+            return null;
+        } catch(AddrFeatException addrFeatException) {
+            //TODO: log
+            return null;
+        } catch(Exception catchAll) {
+            //TODO: log
+            return null;
+        }
 
         return addressResult.getAddress();
     }

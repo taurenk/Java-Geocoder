@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value= HttpStatus.NOT_FOUND,
         reason = "{'status': 'error', 'message': 'Address not Found' }")  // 404
-public class AddressNotFoundExcepttion {
+public class AddressNotFoundExcepttion extends RuntimeException{
 }

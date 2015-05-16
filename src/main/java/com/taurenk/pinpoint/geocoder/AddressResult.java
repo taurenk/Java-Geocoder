@@ -61,7 +61,7 @@ public class AddressResult {
 
     /**
      * Attempt to find potential city strings by parsing out remaining strings in address.
-     * Average US cities are of length 1,2, 3 words.
+     * **Average US cities are of length 1,2, 3 words.
      * @param addressString
      */
     private List<String> extractCityTokens(String addressString) {
@@ -72,6 +72,11 @@ public class AddressResult {
         if (list.length >=2) { potentialCities.add(list[list.length-2] + " "
                 + list[list.length-1] ); }
         if (list.length >=1) { potentialCities.add( list[(list.length-1)]  ); }
+
+        System.out.print("Potential city tokens: ");
+        for( String p : potentialCities) {
+            System.out.printf("<%s> ", p);
+        }
         return potentialCities;
     }
 

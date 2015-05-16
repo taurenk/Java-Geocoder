@@ -1,6 +1,7 @@
 package com.taurenk.pinpoint.controller;
 
 
+import com.taurenk.pinpoint.exception.AddressNotFoundExcepttion;
 import com.taurenk.pinpoint.geocoder.Address;
 import com.taurenk.pinpoint.geocoder.Geocoder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class GeocodeController {
     @RequestMapping("/geocode")
     public Address getTest(@RequestParam(value="address", defaultValue="6 caputo drive manorville ny 11949") String address) {
         Address addr = geocoder.geocode(address);
+        if (addr == null) {
+            throw new AddressNotFoundExcepttion();
+        }
         return  addr;
     }
 
