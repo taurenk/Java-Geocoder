@@ -1,17 +1,11 @@
 package com.taurenk.pinpoint.geocoder;
 
-import com.taurenk.pinpoint.exception.AddrFeatException;
-import com.taurenk.pinpoint.exception.AddressNotFoundExcepttion;
-import com.taurenk.pinpoint.exception.PlaceNotFoundException;
 import com.taurenk.pinpoint.model.AddrFeat;
 import com.taurenk.pinpoint.model.Place;
 import com.taurenk.pinpoint.service.AddrFeatService;
 import com.taurenk.pinpoint.service.PlaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by tauren on 3/25/15.
@@ -24,8 +18,15 @@ public class Geocoder {
 
     @Autowired
     private PlaceService placeService;
+
     @Autowired
     private AddrFeatService addrFeatService;
+
+    @Autowired
+    private GeocodeCity geocodeCity_;
+
+    @Autowired
+    private GeocodeStreet geocodeStreet;
 
     private final String[] LEVELS = {"0 - No Match Found", "1 - City/Zip Match",
                                         "2 - Street Level Match", "3 - Street Level Match: Interpolated"};
@@ -54,133 +55,53 @@ public class Geocoder {
         AddressResult addressResult = new AddressResult(address);
 
         // City will be embeded in street string, this will assist in parsing them out
-        addressResult = this.geocodeCity(addressResult);
+        //addressResult = this.geocodeCity(addressResult);
+        addressResult = this.geocodeCity_beta(addressResult);
 
 
-
-        // TODO: Review Scenarios/LOGIC
-        // TODO: REORDER THESE SEQUENCES...
 
         // Is Address PO Box? TODO
         if (addressResult.getAddress().getPoBox() != null) {
             System.out.println("Address is a PO Box!");
-            if (addressResult.getPotentialPlaces().size() > 0) {
-                address = addressResult.getAddress();
-                return null;
-            }
+           return null;
         }
-
-        // Is City Found? If no street, return , else geocode.
-        if (addressResult.getAddress().getCity() == null) {
-            if(addressResult.getAddress().getStreet() == null) {
-                return null;
-            }
-        }
-
-        // If street string is empty, we may have a city/zip to go off of.
-        if (addressResult.getAddress().getStreet().equals("")) {
-            System.out.println("No Street Found.");
-            if (addressResult.getPotentialPlaces().size() > 0) {
-                address = addressResult.getAddress();
-                // TODO: We want to return a place object here...
-                return this.setAddressWithPlace(address, addressResult.getPotentialPlaces().get(0));
-            }
-        }
-
-        if (address.getIntersectionFlag() == true) {
+        else if (address.getIntersectionFlag() == true) {
             System.out.println("Address is an intersection!");
             return null;
         }
-
-        try {
-            addressResult = this.geocodeStreet(addressResult);
-        } catch(PlaceNotFoundException placeException) {
-            //TODO: log
-            return null;
-        } catch(AddrFeatException addrFeatException) {
-            //TODO: log
-            return null;
-        } catch(Exception catchAll) {
-            //TODO: log
-            return null;
+        else if  (addressResult.getAddress().getStreet() == null && addressResult.getPotentialPlaces() != null ) {
+            System.out.println("Entered Adress, FOUND CITY!");
+            address = setAddressWithPlace(addressResult.getAddress(), addressResult.getPotentialPlaces().get(0));
+            return address;
+        }
+        else {
+            addressResult = postParser.postParse(addressResult);
+            address = this.geocodeStreet.geocodeStreet(addressResult);
+            addressResult.setAddress(address);
+            return address;
         }
 
-        return addressResult.getAddress();
+
     }
 
 
     /**
-     * Using an Address and Potential zipcodes, Query DB to try and find street level address candidates.
-     * Send candidates to ranking algorithm to figure out top candidate.
-     *
+     * call out or geocodeCity service to handle this.
      * @param addressResult
      * @return
      */
-    private AddressResult geocodeStreet(AddressResult addressResult) {
-
-        // Do some string manipulating
-        addressResult = postParser.postParse(addressResult);
-        Address address = addressResult.getAddress();
-
-        //
-        List<AddrFeat> candidates = addrFeatService.findFuzzy_NameZip(address.getStreet(),
-                addressResult.getPotentialZips());
-        // Send Data to ranking Algorithm
-        if (candidates.size() > 0) {
-             candidates = new RankAlgo().rankCandidates(addressResult, candidates);
-            // Copy data into new address -> do interpolation here?
-            addressResult.setAddress(this.setAddressWithFeat(addressResult.getAddress(),
-                                    candidates.get(0)) );
-        } else {
-            // Else we did not find any streets.
-            addressResult.setAddress(
-                        new Address(address.getAddressString(), this.LEVELS[0]) );
-        }
+    private AddressResult geocodeCity_beta(AddressResult addressResult){
+        addressResult = geocodeCity_.GeocodeCity(addressResult);
         return addressResult;
     }
 
-    /**
-     * The idea here is to remove the city from the street string.
-     * Step 1: if zip; try and find city by zip
-     * Step 1a: if no Place matches; find city by potential cities.
-     * If we have matches at point, try and extract city from street string.
-     * @param addressResult
-     * @return
-     */
-    private AddressResult geocodeCity(AddressResult addressResult) {
-        Address address = addressResult.getAddress();
-        GeocodeCity cityGeocoder = new GeocodeCity();
-
-        if (address.getZip() != null) {
-            Place place = placeService.placeByZip(address.getZip());
-            if (place != null) {
-                addressResult = cityGeocoder.geocodeByZip(place, addressResult);
-            }
-
-            if (addressResult.getAddress().getCity() == null) {
-                // try a more 'fuzzier' match based on city tokens.
-                List<Place> placeList = placeService.placesByCityList(addressResult.getCityTokens(), address.getState());
-                if (placeList != null) {
-                    addressResult = cityGeocoder.geocodeByCity(placeList, addressResult);
-                }
-            }
-        }
-        // Rank the Potential Places...
-        if (addressResult.getPotentialPlaces().size() != 0) {
-            addressResult.setPotentialPlaces(
-                    new RankCity().rankCity(
-                            addressResult.getAddress(), addressResult.getPotentialPlaces()
-                    ));
-        }
-        return addressResult;
-    } //End geocodeCity()
 
 
     private Address setAddressWithFeat(Address address, AddrFeat feature) {
         // this is bit tricky maybe. we want to get the zip.city from the Place record
         // but the lat/lon from the AddrFeat
         address.setCity(feature.getLcity());            // TODO: figure out cityleft vs cityright
-        address.setZip(feature.getZipl()); // TODO: figure out zipl vs zipr
+        address.setZip(feature.getZipl());              // TODO: figure out zipl vs zipr
         address.setStreet(feature.getFullname());
 
         //TODO set long/lat?

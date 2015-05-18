@@ -16,6 +16,7 @@ public class Address {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String number;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String street;
     private String city;
 

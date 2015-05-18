@@ -1,107 +1,123 @@
 package com.taurenk.pinpoint.geocoder;
 
+import com.taurenk.pinpoint.exception.PlaceNotFoundException;
 import com.taurenk.pinpoint.model.Place;
+import com.taurenk.pinpoint.service.PlaceService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.commons.codec.language.DoubleMetaphone;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
- * Created by tauren on 4/2/15.
+ * Created by taurenk on 5/15/15.
  */
-
+@Component
 public class GeocodeCity {
 
-
+    @Autowired
+    PlaceService placeService;
+    
     /**
-     * given a potential zipcode, query db to find matches based on the zipcode.
-     * @param place
+     * We pass in the AddressResult object, which *should* contain
+     * List<String>StreetTokens and potential zips.
+     *
+     * We want to find out a few things;
      * @param addressResult
      * @return
      */
-    public AddressResult geocodeByZip(Place place, AddressResult addressResult) {
-        addressResult.addPotentialPlace(place);
-        addressResult.addPotentialZips(place.getZip());
-        for (String potentialCity: addressResult.getCityTokens() ){
-            String stringToReplace = this.findCity(potentialCity, place.getCity());
-            if (stringToReplace != null) {
-                addressResult = this.setCityData(addressResult, stringToReplace, potentialCity);
+    public AddressResult GeocodeCity(AddressResult addressResult) {
+        String extractedCity = null;
+
+        // Retrieve cities by zip
+        if (addressResult.getAddress().getZip() != null) {
+            Place placeCandiate = this.getCityByZip(addressResult.getAddress().getZip());
+            if (placeCandiate != null) {
+                //extractedCity = this.extractCity(addressResult.getCityTokens(), placeCandiate.getCity());
+                addressResult.addPotentialPlace(placeCandiate);
+                addressResult.addPotentialZips(placeCandiate.getZip());
             }
         }
-        return addressResult;
-    }
 
+        // Retrieve cities by tokenized street list
+        if ( (extractedCity==null) && (addressResult.getPotentialPlaces() != null)) {
+            List<Place> placeCandidates = this.getCitybyTokens(addressResult.getCityTokens(), "NY");
+            for (Place place : placeCandidates) {
+                    addressResult.addPotentialPlace(place);
+                    addressResult.addPotentialZips(place.getZip());
+            }
+        }
 
-    /**
-     * Given a list of potential cities, query DB to find matches based on the metaphone calculation of the list items.
-     * @param placeList
-     * @param addressResult
-     * @return addressResult
-     */
-    public AddressResult geocodeByCity(List<Place> placeList, AddressResult addressResult) {
-        outerloop:
-        for (Place potentialPlace : placeList) {
-            addressResult.addPotentialPlace(potentialPlace);
-            addressResult.addPotentialZips(potentialPlace.getZip());
-            for (String s : addressResult.getCityTokens()){
-                String stringToReplace = this.findCity(s, potentialPlace.getCity());
-                if (stringToReplace != null) {
-                    addressResult = this.setCityData(addressResult, stringToReplace, potentialPlace.getCity());
-                    // addressResult.addPotentialPlace(potentialPlace);
-                    break outerloop;
+        for (Place place : addressResult.getPotentialPlaces()) {
+            extractedCity = this.extractCity(addressResult.getCityTokens(), place.getCity());
+            if (extractedCity != null) {
+                String oldStreet  =  addressResult.getAddress().getStreet();
+                addressResult.getAddress().setStreet(oldStreet.replace(extractedCity, ""));
+
+                if( addressResult.getAddress().getStreet().trim().equals("")) {
+                    addressResult.getAddress().setStreet(null);
                 }
+
+
             }
-        }
+            if (extractedCity != null) { break; }
+        } // end extract places loop
 
         return addressResult;
     }
 
-
     /**
-     * Use found city data to setup AddressResult/Address data
-     * @param addressResult
-     * @param stringToReplace
-     * @param city
-     * @return addressResult
+     * Retrieve city by given zipcode
+     * @return Place
      */
-    public AddressResult setCityData(AddressResult addressResult, String stringToReplace, String city ) {
-        Address address = addressResult.getAddress();
-        address.setCity(city);
-        // TEST 04/16/2015: Take out spacing in front of
-        String newStreet;
-        if (address.getStreet().length() == stringToReplace.length() ) {
-            newStreet = address.getStreet().replaceAll("(" + stringToReplace + ")$","");
-        } else {
-            newStreet = address.getStreet().replaceAll("\\s(" + stringToReplace + ")$","");
+    private Place getCityByZip(String zipcode) {
+        try {
+            Place placeCandidate = placeService.placeByZip("11949");
+            return placeCandidate;
+        } catch (PlaceNotFoundException placeNotFound) {
+            return null;
+        } catch (Exception ex) {
+            System.out.println("\nERROR IN CITY BY ZIP + <" + zipcode + ">");
+            System.out.println(ex.toString());
+            return null;
         }
 
-        address.setStreet(newStreet);
-        addressResult.setAddress(address);
-        return addressResult;
     }
 
     /**
-     * return string to replace in street string
-     * @param cityToken
-     * @param candidateCity
+     * Retrieve places by token list.
+     * @param streetTokens
      * @return
      */
-    public String findCity(String cityToken, String candidateCity) {
-        if (cityToken.equals(candidateCity) ) {
-            return cityToken;
+    private List<Place> getCitybyTokens(List<String> streetTokens, String state) {
+        try {
+            List<Place> placeCandidates = placeService.placesByCityList(streetTokens, "NY");
+            return placeCandidates;
+        } catch (PlaceNotFoundException placeNotFound) {
+            return null;
+        } catch (Exception ex) {
+            return null;
         }
+    }
 
-        DoubleMetaphone dm = new DoubleMetaphone();
-        String tokenMetaphone = dm.doubleMetaphone(cityToken);
-        String candidateMetaphone = dm.doubleMetaphone(candidateCity);
-        if (tokenMetaphone.equals(candidateMetaphone)) {
-            return cityToken;
-        }
+    /**
+     * take tokens and compare against potential city.
+     * @param streetTokens
+     * @param potentialCity
+     * @return
+     */
+    private String extractCity(List<String> streetTokens, String potentialCity) {
+        //DoubleMetaphone dm = new DoubleMetaphone();
 
-        int stringDistance = org.apache.commons.lang.StringUtils.getLevenshteinDistance(cityToken, candidateCity);
-        if (stringDistance==1) {
-            return cityToken;
+        // Starting with largest token in street string, Compare to the found city.
+        // If a city matches a street token, we can extract it out!
+        for (String streetToken : streetTokens) {
+           if (org.apache.commons.lang.StringUtils.getLevenshteinDistance(streetToken, potentialCity) <= 2) {
+                return potentialCity;
+           }
         }
-        return null;
+        return  null;
     }
 
 

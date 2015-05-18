@@ -26,14 +26,15 @@ public class PlaceService {
      * @return
      */
     public Place placeByZip(String zip) {
+        Place place = null;
         try {
-            Place place = placeRepository.findPlaceByZip(zip);
+            place = placeRepository.findPlaceByZip(zip);
         } catch (Exception ex) {
             System.out.printf("Error in PlaceService: %s\n", ex.toString());
             throw new InternalServerException();
         }
 
-        return placeRepository.findPlaceByZip(zip);
+        return place;
     }
 
     /**

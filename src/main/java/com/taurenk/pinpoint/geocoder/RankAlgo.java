@@ -9,6 +9,9 @@ import java.util.List;
 
 /**
  * Created by taurenk on 4/8/15.
+ * Street Level address ranking via "Best Fit Algo".
+ * Essentially, we see which candidates 'fit' the inputted address
+ * - we do NOT take into account what they could have meant, zip+4, etc..
  */
 public class RankAlgo {
 
@@ -23,6 +26,7 @@ public class RankAlgo {
             candidate.setRankScore(this.simpleScore(address, candidate)) ;
         }
 
+        /*
         System.out.println("Pre Rank:");
         for (AddrFeat af : candidates) {
             System.out.println("\t" + af.getGid() + "|" + af.getRankScore());
@@ -30,9 +34,9 @@ public class RankAlgo {
         candidates = this.rank(candidates);
         System.out.println("Post Rank:");
         for (AddrFeat af : candidates) {
-            System.out.println("\t" + af.getGid() + "|" + af.getRankScore() + "|"
-                        + af.getFullname() + "|" + af.getZipl());
+           System.out.println("\t" + af.getGid() + "|" + af.getRankScore() + "|" + af.getFullname() + "|" + af.getZipl());
         }
+        */
         return candidates;
     }
 
@@ -117,9 +121,9 @@ public class RankAlgo {
 
 
             if ((intFromHn <= intTarget) && (intTarget <= intToHn)) {
-                System.out.println("\t\tHIT ONE");
+                //System.out.println("\t\tHIT ONE");
                 if ( (intTarget % 2) == (intFromHn % 2)) {
-                    System.out.println("\t\tHIT two");
+                    //System.out.println("\t\tHIT two");
                     found = true;
                 }
             } else if ((intFromHn >= intTarget) && (intTarget >= intToHn)) {
