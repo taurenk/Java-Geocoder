@@ -4,6 +4,8 @@ import com.vividsolutions.jts.geom.Coordinate;
 
 /**
  * Created by taurenk on 5/19/15.
+ * Functions to handle math dealing with Geometric inputs and variables.
+ *
  */
 public class GeomMath {
 
@@ -34,6 +36,14 @@ public class GeomMath {
         return new Coordinate(Math.toDegrees(lat2), Math.toDegrees(lon2));
 
     }
+
+
+    /**
+     * Calculate bearing based on 2 coordinates.
+     * @param coord1
+     * @param coord2
+     * @return angle of bearing
+     */
     public Double getBearing(Coordinate coord1, Coordinate coord2) {
 
         Double lat1 = Math.toRadians(coord1.x);
@@ -45,7 +55,6 @@ public class GeomMath {
                 Math.sin(lat1)*Math.cos(lat2)*Math.cos(delta);
         Double angle = Math.atan2(y, x);
         return ((Math.toDegrees(angle))+360) % 360;
-
     }
 
 

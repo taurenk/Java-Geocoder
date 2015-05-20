@@ -30,12 +30,20 @@ public class RankAlgo {
         for (AddrFeat af : candidates) {
             System.out.println("\t" + af.getGid() + "|" + af.getRankScore());
         }
+        */
         candidates = this.rank(candidates);
         System.out.println("Post Rank:");
         for (AddrFeat af : candidates) {
-           System.out.println("\t" + af.getGid() + "|" + af.getRankScore() + "|" + af.getFullname() + "|" + af.getZipl());
+           System.out.println("\t" + af.getGid() + "|" + af.getRankScore()
+                                + "|" + af.getFullname() + "|" + af.getZipl()
+                                + "|" + af.getSideOfStreet()
+                           + "|" + af.getLfromhn() + "|" + af.getLtohn()
+                           + "|" + af.getRfromhn() + "|" + af.getRtohn()
+
+           );
+
         }
-        */
+
         return candidates;
     }
 

@@ -55,7 +55,7 @@ public class AddrFeatService {
             addrFeat.setZipl((String) result[5]);
             addrFeat.setZipr((String) result[6]);
             addrFeat.setState((String) result[7]);
-            addrFeat.setLtohn((String) result[8]);
+            addrFeat.setLfromhn((String) result[8]); //check query
             addrFeat.setLtohn((String) result[9]);
             addrFeat.setRfromhn((String) result[10]);
             addrFeat.setRtohn((String) result[11]);
