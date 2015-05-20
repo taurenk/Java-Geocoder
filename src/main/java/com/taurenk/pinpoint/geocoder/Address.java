@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.taurenk.pinpoint.model.Place;
+import com.vividsolutions.jts.geom.Coordinate;
 
 import java.util.List;
 
@@ -31,10 +32,13 @@ public class Address {
     @JsonIgnore
     private Boolean intersectionFlag = false;
 
+    /*
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private double lat;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private double lon;
+    */
+    private Coordinate coordinate;
 
     private String geocodeLevel;
 
@@ -60,6 +64,7 @@ public class Address {
 
     public void setGeocodeLevel(String level) { this.geocodeLevel = level; }
 
+    /*
     public double getLat() {
         return lat;
     }
@@ -74,6 +79,15 @@ public class Address {
 
     public void setLon(double lon) {
         this.lon = lon;
+    }
+    */
+
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+
+    public void setCoordinate(Coordinate coordinate) {
+        this.coordinate = coordinate;
     }
 
     public String getAddressString() {

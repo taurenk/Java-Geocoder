@@ -76,7 +76,7 @@ public class Geocoder {
         }
         else {
             addressResult = postParser.postParse(addressResult);
-            address = this.geocodeStreet.geocodeStreet(addressResult);
+            address = this.geocodeStreet.geocodeStreet(addressResult); //
             addressResult.setAddress(address);
             return address;
         }
@@ -114,8 +114,8 @@ public class Geocoder {
         address.setCity(place.getCity());
         address.setZip(place.getZip());
         address.setStreet(null);
-        address.setLat(place.getLatitude());
-        address.setLon(place.getLongitude());
+        //address.setLat(place.getLatitude());
+        //address.setLon(place.getLongitude());
         return address;
     }
 

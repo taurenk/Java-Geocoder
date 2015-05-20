@@ -33,6 +33,8 @@ public class GeocodeStreet {
         if (streetCandidates != null) {
             streetCandidates = new RankAlgo().rankCandidates(addressResult, streetCandidates);
             addr = this.setAddressData(streetCandidates.get(0), addr);
+            // Attempt to interpolate number. If an error hapens, we just set it to null.
+            addr.setCoordinate(new Interpolation().interpolate(streetCandidates.get(0),addr.getNumber()));
             System.out.println("Address = " + addr.toString());
         } else {
             //No candidates found

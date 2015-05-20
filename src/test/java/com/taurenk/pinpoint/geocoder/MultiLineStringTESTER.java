@@ -4,6 +4,7 @@ import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.linearref.LinearIterator;
 
 /**
  * Created by taurenk on 4/5/15.
@@ -45,7 +46,15 @@ public class MultiLineStringTESTER {
                 "-72.793323 40.856804,-72.793247 40.856739,-72.793125 40.856705,-72.792574 40.856646))";
 
         MultiLineString mls = new GeometryHelper().stringToMultiLineString(testString);
+
         System.out.println("Converted:" + mls.toText()); // NULL POINTER EXCEPTION
+        System.out.println("Line Iterator:");
+        for (LinearIterator it = new LinearIterator(mls); it.hasNext(); it.next()) {
+            System.out.println(it.getLine().toString());
+            Coordinate[] ls = it.getLine().getCoordinates();
+            System.out.println(ls[0]);
+
+        }
 
     }
 

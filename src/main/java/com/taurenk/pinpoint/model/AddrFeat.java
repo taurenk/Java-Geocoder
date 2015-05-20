@@ -177,9 +177,14 @@ public class AddrFeat {
     }
 
 
-    public String getGeom() {
+    public String getGeom_AsString() {
         return this.geom.toString();
     }
+
+    public MultiLineString getGeom() {
+        return this.geom;
+    }
+
     public void setGeom(MultiLineString geom) {
         this.geom = geom;
     }

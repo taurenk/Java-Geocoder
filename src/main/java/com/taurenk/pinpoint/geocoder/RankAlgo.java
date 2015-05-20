@@ -21,9 +21,8 @@ public class RankAlgo {
 
 
         // Iterate through potential candidates to rank them.
-        int index = 0;
         for (AddrFeat candidate : candidates) {
-            candidate.setRankScore(this.simpleScore(address, candidate)) ;
+            candidate = this.simpleScore(address, candidate);
         }
 
         /*
@@ -47,7 +46,7 @@ public class RankAlgo {
      * @param address
      * @param candidate
      */
-    public Double simpleScore(Address address, AddrFeat candidate) {
+    public AddrFeat simpleScore(Address address, AddrFeat candidate) {
         Double curr_score = 0.0;
 
         // Check zips
@@ -65,16 +64,17 @@ public class RankAlgo {
 
         // Check left Range then Right
         if (address.getNumber() != null) {
-            System.out.println("\tRanking Range...");
+            //System.out.println("\tRanking Range...");
             if (this.checkRange(candidate.getLfromhn(), candidate.getLtohn(), address.getNumber())){
                 curr_score += .5;
+                candidate.setSideOfStreet("L");
             } else if (this.checkRange(candidate.getRfromhn(), candidate.getRtohn(), address.getNumber())) {
                 curr_score += .5;
+                candidate.setSideOfStreet("R");
             }
         } //End Check Range
-
-
-        return curr_score;
+        candidate.setRankScore(curr_score);
+        return candidate;
     }
 
 
@@ -104,8 +104,7 @@ public class RankAlgo {
     }
 
     /**
-    * Check if a given number is between address ranges. Also check if its in correct side, odd/even...
-    * Census Ranges can be alpha numeric.
+    * Check if a given number is between address ranges.
     * @param fromHn
     * @param toHn
     * @param target
@@ -121,9 +120,7 @@ public class RankAlgo {
 
 
             if ((intFromHn <= intTarget) && (intTarget <= intToHn)) {
-                //System.out.println("\t\tHIT ONE");
                 if ( (intTarget % 2) == (intFromHn % 2)) {
-                    //System.out.println("\t\tHIT two");
                     found = true;
                 }
             } else if ((intFromHn >= intTarget) && (intTarget >= intToHn)) {
@@ -139,18 +136,6 @@ public class RankAlgo {
     }
 
 
-    /**
-     * TODO how to set city? Set is based on side of street?
-     * @param address
-     * @param addrFeat
-     * @return
-     */
-    private Address setData(Address address, AddrFeat addrFeat){
-        //address.setCity();
-        address.setStreet(addrFeat.getFullname());
-        address.setState(addrFeat.getState());
-        return address;
-    }
 
 
 }
