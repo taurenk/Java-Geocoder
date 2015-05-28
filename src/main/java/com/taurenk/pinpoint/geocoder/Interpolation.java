@@ -31,9 +31,9 @@ public class Interpolation {
 
 
             if (addrFeat.getSideOfStreet() == null) {
-
                 return coords[0];
             }
+
             System.out.println("\t\tInterpolation: Str side specified:" + addrFeat.getSideOfStreet());
             int from;
             int to;
@@ -110,7 +110,7 @@ public class Interpolation {
                                                 segmentMap.get(i).getEnd()
                                             )
                                         );
-                System.out.println("Calculate Point:" + newCoord.x + "," + newCoord.y );
+                System.out.println("Calculated Point:" + newCoord.x + "," + newCoord.y );
                 break;
             }
         }
