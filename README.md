@@ -1,7 +1,7 @@
-<h2>PinPointGeocoder2</h2>
+<h2>Java Geocoder</h2>
 
 <h4>About the PinPoint Geocoding Project</h4>
-PinPoint is an open sourced geocoding service built on Java, Spring, Hibernate, PostgreSQL, US Census Data, and hardwork! 
+Java Geocoder is an open sourced geocoding service built on Java, Spring, Hibernate, PostgreSQL, US Census Data, and hardwork! 
 
 The application is split up into quite a few layers: Controller, Service, Repository, and Model with the addition of the  Geocoder module.
 
